@@ -106,7 +106,6 @@ const follows = [
 ];
 
 // type
-
 const typeDefs = `#graphql
   # This "Book" type defines the queryable fields for every book in our data source.
   type Book {
@@ -171,6 +170,9 @@ const resolvers = {
   },
 
   Mutation: {
+    login: async (_, email, password) => {
+      const login = await 
+    },
     addPost: async (
       _,
       {
