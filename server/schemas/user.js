@@ -1,3 +1,5 @@
+const UserModel = require("../models/UserModel");
+
 const typeDefs = `#graphql
 type User {
     _id: ID
@@ -23,7 +25,14 @@ const resolvers = {
   Query: {
     getUser: () => users,
   },
-  Mutation: {},
+  Mutation: {
+    register: async (_, { name, username, email, password }) => {
+      const newUser = await { name, username, email, password };
+
+      await UserModel.create(newUser);
+      return newUser;
+    },
+  },
 };
 
 module.exports = { typeDefs, resolvers };

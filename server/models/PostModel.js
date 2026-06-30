@@ -12,7 +12,15 @@ class PostModel {
 
   static async create(newPost) {
     await this.collection().insertOne(newPost);
+    return newPost;
   }
+
+//   static async getById(_id) {
+//     const post = await this.collection().findOne({
+//       _id,
+//     });
+//     return post;
+//   }
 }
 
 module.exports = PostModel;
