@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { database } = require("../config/mongodb");
 const { hashSync } = require("bcryptjs");
 
@@ -77,6 +78,11 @@ class UserModel {
       },
     ];
     return await this.collection().aggregate(agg).toArray();
+  }
+
+  //   get user by id
+  static async findById(_id) {
+    return await this.collection().findOne({ _id: new ObjectId(_id) });
   }
 }
 

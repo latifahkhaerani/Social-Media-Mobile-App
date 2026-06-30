@@ -8,7 +8,7 @@ type User {
     name: String
     username: String
     email: String
-    # password: String
+    # password: String #hide password
   }
 
   type LoginResponse {
@@ -19,6 +19,7 @@ type User {
     type Query {
         searchUser(name: String, username:String): [User] 
         getUser: [User]
+        getUserById(_id: ID): User
     }
 
     type Mutation {
@@ -38,6 +39,10 @@ const resolvers = {
       const filteredUser = await UserModel.findByName(name, username);
 
       return filteredUser;
+    },
+
+    getUserById: async (_, { _id }) => {
+      return await UserModel.findById(_id);
     },
   },
   Mutation: {
