@@ -61,7 +61,9 @@ const resolvers = {
         createdAt,
         updatedAt,
       },
+      { authentication },
     ) => {
+      await authentication();
       const newPost = {
         _id,
         content,

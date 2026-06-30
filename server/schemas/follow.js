@@ -13,6 +13,12 @@ const typeDefs = `#graphql
 }
 `;
 
-const resolvers = {};
+const resolvers = {
+    Mutation: {
+        follow: async ()=>{
+            
+        }
+    }
+};
 
 module.exports = { resolvers, typeDefs };

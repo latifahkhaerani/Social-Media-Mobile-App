@@ -69,11 +69,12 @@ const resolvers = {
       if (isPassValid) {
         throw new Error("Invalid email or password");
       }
-      console.log(process.env.JWT_SECRET);
+      //   console.log(process.env.JWT_SECRET);
       //   3. create token
+
       const token = sign(
         {
-          _id: user.id,
+          _id: user._id,
           username: user.username,
           email: user.email,
         },

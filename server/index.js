@@ -13,6 +13,7 @@ const {
   typeDefs: followTypeDefs,
   resolvers: followResolvers,
 } = require("./schemas/follow");
+const authentication = require("./middlewares/authentication");
 
 const server = new ApolloServer({
   typeDefs: [postTypeDefs, userTypeDefs, followTypeDefs],
@@ -22,6 +23,12 @@ const server = new ApolloServer({
 async function startServer() {
   const { url } = await startStandaloneServer(server, {
     listen: { port: 3000 },
+    //
+    context: async ({ req }) => {
+      return {
+        authentication: () => authentication(req),
+      };
+    },
   });
   console.log(`🚀  Server ready at: ${url}`);
 }
