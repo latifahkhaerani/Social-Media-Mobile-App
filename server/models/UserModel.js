@@ -46,8 +46,32 @@ class UserModel {
     return newUser;
   }
 
+  //untuk login
   static async findByEmail(email) {
     return await this.collection().findOne({ email });
+  }
+
+  //  search:1 find by name/username
+  static async findByName(name = "", username = "") {
+    const agg = [
+      {
+        $match: {
+          $or: [
+            {
+              name: {
+                $regex: name,
+                $options: "i",
+              },
+              username: {
+                $regex: username,
+                $options: "i",
+              },
+            },
+          ],
+        },
+      },
+    ];
+    return await this.collection().aggregate(agg).toArray();
   }
 }
 
