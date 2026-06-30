@@ -51,7 +51,12 @@ class UserModel {
     return await this.collection().findOne({ email });
   }
 
-  //  search:1 find by name/username
+  //   get all user
+  static async findUsers() {
+    return await this.collection().find().toArray();
+  }
+
+  //  search: find by name/username
   static async findByName(name = "", username = "") {
     const agg = [
       {

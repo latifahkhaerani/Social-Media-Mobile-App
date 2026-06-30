@@ -30,6 +30,10 @@ type User {
 
 const resolvers = {
   Query: {
+    getUser: async () => {
+      return await UserModel.findUsers();
+    },
+
     searchUser: async (_, { name, username }) => {
       const filteredUser = await UserModel.findByName(name, username);
 
