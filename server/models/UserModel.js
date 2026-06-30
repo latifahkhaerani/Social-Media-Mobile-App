@@ -10,9 +10,7 @@ class UserModel {
     /* 
             1. validasi:
                 a. email required, email format
-                b. password length min 6
-                c. username length min 3
-                d. email dan username unik
+                b. email dan username unik
             2. hash password
             3. simpan
         */
@@ -46,6 +44,10 @@ class UserModel {
 
     await this.collection().insertOne(newUser);
     return newUser;
+  }
+
+  static async findByEmail(email) {
+    return await this.collection().findOne({ email });
   }
 }
 
