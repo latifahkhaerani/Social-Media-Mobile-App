@@ -1,3 +1,5 @@
+const FollowModel = require("../models/FollowModel");
+
 const typeDefs = `#graphql
   type Follow {
     _id: ID
@@ -8,17 +10,28 @@ const typeDefs = `#graphql
   }
 
   type Mutation {  
-  follow(_id: ID,followingId: ID,followerId: ID,createdAt: String ,updatedAt: String ): Follow 
+  follow(followingId: ID ): Follow 
   likePost(postId: ID, userId: ID): Post #belum
 }
 `;
 
 const resolvers = {
-    Mutation: {
-        follow: async ()=>{
-            
-        }
-    }
+  Mutation: {
+    follow: async (_, { followingId }, { authentication }) => {
+      const loginInfo = await authentication();
+
+      //   console.log(loginInfo._id, "siapaa ya?");
+
+      const newFollow = {
+        followerId: loginInfo._id,
+        followingId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      return await FollowModel.create(newFollow);
+    },
+  },
 };
 
 module.exports = { resolvers, typeDefs };

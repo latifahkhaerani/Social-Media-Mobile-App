@@ -71,7 +71,6 @@ const resolvers = {
       }
       //   console.log(process.env.JWT_SECRET);
       //   3. create token
-
       const token = sign(
         {
           _id: user._id,

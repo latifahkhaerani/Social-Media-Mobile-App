@@ -7,7 +7,6 @@ const UserModel = require("../models/UserModel");
         4. return login info (user)
         5. check apakah user ada di db
 */
-
 const authentication = async (req) => {
   const token = req.headers.authorization || "";
 
@@ -23,7 +22,7 @@ const authentication = async (req) => {
   const decoded = verify(accessToken, process.env.JWT_SECRET);
 
   const user = await UserModel.findById(decoded._id);
-  
+
   if (!user) {
     throw new Error("Please login first");
   }
