@@ -84,6 +84,8 @@ class UserModel {
   static async findById(_id) {
     return await this.collection().findOne({ _id: new ObjectId(_id) });
   }
+
+  
 }
 
 module.exports = UserModel;

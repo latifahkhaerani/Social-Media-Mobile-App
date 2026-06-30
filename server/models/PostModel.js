@@ -22,6 +22,11 @@ class PostModel {
     });
     return post;
   }
+
+  static async commentPost(newComment) {
+    await this.collection().insertOne(newComment);
+    return newComment;
+  }
 }
 
 module.exports = PostModel;

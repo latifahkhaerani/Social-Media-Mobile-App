@@ -52,6 +52,7 @@ const resolvers = {
       await UserModel.create(newUser);
       return newUser;
     },
+    
     login: async (_, { email, password }) => {
       /* 
         1. search user by email(di model), jika tidak ada error
@@ -84,6 +85,8 @@ const resolvers = {
         token,
       };
     },
+
+
   },
 };
 

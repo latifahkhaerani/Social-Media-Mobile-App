@@ -1,3 +1,4 @@
+const FollowModel = require("../models/FollowModel");
 const PostModel = require("../models/PostModel");
 
 const typeDefs = `#graphql
@@ -33,7 +34,8 @@ const typeDefs = `#graphql
 
   type Mutation {
     addPost(_id: ID,content: String,tags: [String],imgUrl: String,authorId: ID,createdAt: String ,updatedAt: String): Post 
-    # commentPost(): Post 
+    commentPost(postId: ID, content: String): Post 
+    # likePost(): Post 
   }
 `;
 
@@ -77,6 +79,19 @@ const resolvers = {
       };
       await PostModel.create(newPost);
       return newPost;
+    },
+
+    commentPost: async (_, { postId, content }, { authentication }) => {
+      const loginInfo = await authentication();
+
+      const newComment = {
+        content,
+        username: loginInfo.username,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      return await PostModel.commentPost(newComment);
     },
   },
 };
