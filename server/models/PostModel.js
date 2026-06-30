@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { database } = require("../config/mongodb.js");
 
 class PostModel {
@@ -15,12 +16,12 @@ class PostModel {
     return newPost;
   }
 
-//   static async getById(_id) {
-//     const post = await this.collection().findOne({
-//       _id,
-//     });
-//     return post;
-//   }
+  static async getById(_id) {
+    const post = await this.collection().findOne({
+      _id: new ObjectId(_id),
+    });
+    return post;
+  }
 }
 
 module.exports = PostModel;

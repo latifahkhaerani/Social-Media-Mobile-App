@@ -28,7 +28,7 @@ const typeDefs = `#graphql
   
   type Query {
     getPosts: [Post]
-    getPostsById(_id: ID): Post
+    getPostById(_id: ID): Post
   }
 
   type Mutation {
@@ -43,7 +43,9 @@ const resolvers = {
       const posts = await PostModel.getAll();
       return posts;
     },
-    // getPostById: async (_, { _id }) => {},
+    getPostById: async (_, { _id }) => {
+      return await PostModel.getById(_id);
+    },
   },
   Mutation: {
     addPost: async (

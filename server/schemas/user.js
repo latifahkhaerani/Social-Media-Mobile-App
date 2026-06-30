@@ -17,9 +17,9 @@ type User {
   }
 
     type Query {
-        searchUser(name: String, username:String): [User] 
-        getUser: [User]
-        getUserById(_id: ID): User
+    searchUser(name: String, username:String): [User] 
+    getUser: [User]
+    getUserById(_id: ID): User
     }
 
     type Mutation {
