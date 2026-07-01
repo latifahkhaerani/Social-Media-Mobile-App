@@ -41,7 +41,7 @@ const resolvers = {
       return filteredUser;
     },
 
-    getUserById: async (_, { _id }) => {
+    getUserById: async (_, args, { _id }) => {
       return await UserModel.findById(_id);
     },
   },

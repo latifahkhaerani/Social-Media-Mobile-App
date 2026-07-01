@@ -82,10 +82,45 @@ class UserModel {
 
   //   get user by id
   static async findById(_id) {
+    const agg = [
+      [
+        {
+          $lookup: {
+            from: "Follows",
+            localField: "_id",
+            foreignField: "followerId",
+            as: "following",
+          },
+        },
+        {
+          $lookup: {
+            from: "Follows",
+            localField: "_id",
+            foreignField: "followingId",
+            as: "follower",
+          },
+        },
+        {
+          $lookup: {
+            from: "Users",
+            localField: "following.followingId",
+            foreignField: "_id",
+            as: "following",
+          },
+        },
+        {
+          $lookup: {
+            from: "Users",
+            localField: "follower.followerId",
+            foreignField: "_id",
+            as: "follower",
+          },
+        },
+      ],
+    ];
+    
     return await this.collection().findOne({ _id: new ObjectId(_id) });
   }
-
-  
 }
 
 module.exports = UserModel;

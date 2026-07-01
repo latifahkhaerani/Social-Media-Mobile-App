@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const FollowModel = require("../models/FollowModel");
 
 const typeDefs = `#graphql
@@ -23,7 +24,7 @@ const resolvers = {
 
       const newFollow = {
         followerId: loginInfo._id,
-        followingId,
+        followingId: new ObjectId(followingId),
         createdAt: new Date(),
         updatedAt: new Date(),
       };
