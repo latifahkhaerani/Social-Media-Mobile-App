@@ -33,9 +33,9 @@ const typeDefs = `#graphql
   }
 
   type Mutation {
-    addPost(_id: ID,content: String,tags: [String],imgUrl: String,authorId: ID,createdAt: String ,updatedAt: String): Post 
+    addPost(content: String,tags: [String],imgUrl: String): Post 
     commentPost(postId: ID, content: String): Post 
-    # likePost(): Post 
+    likePost(postId: ID): Likes
   }
 `;
 
@@ -50,32 +50,18 @@ const resolvers = {
     },
   },
   Mutation: {
-    addPost: async (
-      _,
-      {
-        _id,
-        content,
-        tags,
-        imgUrl,
-        authorId,
-        comments,
-        likes,
-        createdAt,
-        updatedAt,
-      },
-      { authentication },
-    ) => {
-      await authentication();
+    addPost: async (_, { content, tags, imgUrl }, { authentication }) => {
+      const loginInfo = await authentication();
+
       const newPost = {
-        _id,
         content,
         tags,
         imgUrl,
-        authorId,
-        comments,
-        likes,
-        createdAt,
-        updatedAt,
+        authorId: loginInfo._id,
+        comments: [],
+        likes: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       await PostModel.create(newPost);
       return newPost;
@@ -91,7 +77,19 @@ const resolvers = {
         updatedAt: new Date(),
       };
 
-      return await PostModel.commentPost(newComment);
+      return await PostModel.comment(postId, newComment);
+    },
+
+    likePost: async (_, { postId }, { authentication }) => {
+      const loginInfo = await authentication();
+
+      const newLike = {
+        username: loginInfo.username,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      return await PostModel.like(postId, newLike);
     },
   },
 };

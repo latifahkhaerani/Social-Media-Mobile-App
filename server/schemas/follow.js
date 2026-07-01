@@ -11,7 +11,6 @@ const typeDefs = `#graphql
 
   type Mutation {  
   follow(followingId: ID ): Follow 
-  likePost(postId: ID, userId: ID): Post #belum
 }
 `;
 
@@ -20,7 +19,7 @@ const resolvers = {
     follow: async (_, { followingId }, { authentication }) => {
       const loginInfo = await authentication();
 
-    //   console.log(loginInfo, "siapaa ya?");
+    //   console.log(loginInfo, "siapaa ya?");x
 
       const newFollow = {
         followerId: loginInfo._id,

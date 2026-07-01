@@ -23,9 +23,54 @@ class PostModel {
     return post;
   }
 
-  static async commentPost(newComment) {
-    await this.collection().insertOne(newComment);
+  static async comment(postId, newComment) {
+    await this.collection().findOneAndUpdate(
+      {
+        _id: new ObjectId(postId),
+      },
+      {
+        $push: {
+          comments: newComment,
+        },
+      },
+    );
+
     return newComment;
+  }
+
+  static async like(postId, newLike) {
+    // 1. Cari dulu postnya
+    const post = await this.collection().findOne({
+      _id: new ObjectId(postId),
+    });
+
+    // jika tidak ada post
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    // console.log(post.likes, "isi post apa");
+    const alreadyLiked = post.likes.some((like) => {
+      console.log(like);
+      return like.username === newLike.username;
+    });
+
+    if (alreadyLiked) {
+      throw new Error("You already liked this post");
+    }
+
+    await this.collection().findOneAndUpdate(
+      {
+        _id: new ObjectId(postId),
+      },
+      {
+        $push: {
+          likes: newLike,
+        },
+      },
+    );
+
+    return newLike;
   }
 }
 
