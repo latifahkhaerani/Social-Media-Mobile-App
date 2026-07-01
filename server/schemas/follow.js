@@ -20,7 +20,7 @@ const resolvers = {
     follow: async (_, { followingId }, { authentication }) => {
       const loginInfo = await authentication();
 
-    //   console.log(loginInfo, "siapaa ya?");x
+      //   console.log(loginInfo, "siapaa ya?");x
 
       const newFollow = {
         followerId: loginInfo._id,

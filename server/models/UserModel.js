@@ -68,6 +68,8 @@ class UserModel {
                 $regex: name,
                 $options: "i",
               },
+            },
+            {
               username: {
                 $regex: username,
                 $options: "i",
@@ -83,43 +85,48 @@ class UserModel {
   //   get user by id
   static async findById(_id) {
     const agg = [
-      [
-        {
-          $lookup: {
-            from: "Follows",
-            localField: "_id",
-            foreignField: "followerId",
-            as: "following",
-          },
+      {
+        $match: {
+          _id: new ObjectId(_id),
         },
-        {
-          $lookup: {
-            from: "Follows",
-            localField: "_id",
-            foreignField: "followingId",
-            as: "follower",
-          },
+      },
+      {
+        $lookup: {
+          from: "Follows",
+          localField: "_id",
+          foreignField: "followerId",
+          as: "following",
         },
-        {
-          $lookup: {
-            from: "Users",
-            localField: "following.followingId",
-            foreignField: "_id",
-            as: "following",
-          },
+      },
+      {
+        $lookup: {
+          from: "Follows",
+          localField: "_id",
+          foreignField: "followingId",
+          as: "follower",
         },
-        {
-          $lookup: {
-            from: "Users",
-            localField: "follower.followerId",
-            foreignField: "_id",
-            as: "follower",
-          },
+      },
+      {
+        $lookup: {
+          from: "Users",
+          localField: "following.followingId",
+          foreignField: "_id",
+          as: "following",
         },
-      ],
+      },
+      {
+        $lookup: {
+          from: "Users",
+          localField: "follower.followerId",
+          foreignField: "_id",
+          as: "follower",
+        },
+      },
     ];
-    
-    return await this.collection().findOne({ _id: new ObjectId(_id) });
+
+    const result =  await this.collection().aggregate(agg).toArray();
+    console.log(result)
+    return result[0]
   }
 }
 

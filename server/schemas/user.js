@@ -9,6 +9,8 @@ type User {
     username: String
     email: String
     # password: String #hide password
+    following: [User]
+    follower: [User]
   }
 
   type LoginResponse {
@@ -36,12 +38,15 @@ const resolvers = {
     },
 
     searchUser: async (_, { name, username }) => {
-      const filteredUser = await UserModel.findByName(name, username);
+      const filteredUser = await UserModel.findByName(
+        name || "",
+        username || "",
+      );
 
       return filteredUser;
     },
 
-    getUserById: async (_, args, { _id }) => {
+    getUserById: async (_, { _id }) => {
       return await UserModel.findById(_id);
     },
   },
@@ -52,7 +57,7 @@ const resolvers = {
       await UserModel.create(newUser);
       return newUser;
     },
-    
+
     login: async (_, { email, password }) => {
       /* 
         1. search user by email(di model), jika tidak ada error
@@ -85,8 +90,6 @@ const resolvers = {
         token,
       };
     },
-
-
   },
 };
 
