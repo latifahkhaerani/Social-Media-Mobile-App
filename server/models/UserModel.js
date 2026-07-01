@@ -125,7 +125,7 @@ class UserModel {
     ];
 
     const result =  await this.collection().aggregate(agg).toArray();
-    console.log(result)
+    // console.log(result)
     return result[0]
   }
 }
