@@ -7,7 +7,23 @@ class PostModel {
   }
 
   static async getAll() {
-    const post = await this.collection().find().toArray();
+    const agg = [
+      {
+        $lookup: {
+          from: "Users",
+          localField: "authorId",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+    ];
+
+    const post = await this.collection().aggregate(agg).toArray();
     return post;
   }
 
