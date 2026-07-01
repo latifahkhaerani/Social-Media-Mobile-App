@@ -1,3 +1,4 @@
+const redis = require("../config/redis");
 const FollowModel = require("../models/FollowModel");
 const PostModel = require("../models/PostModel");
 
@@ -25,6 +26,7 @@ const typeDefs = `#graphql
     likes: [Likes] 
     createdAt: String 
     updatedAt: String 
+    author: User
   }
   
   type Query {
@@ -41,8 +43,24 @@ const typeDefs = `#graphql
 
 const resolvers = {
   Query: {
-    getPosts: async () => {
+    getPosts: async (parent, args) => {
+      // redis
+      /* 
+                1. check di cache ada data books atau tidak?
+                    a. jika ada langsung kembalikan sebagai response
+                    b. jika tidak ada ambil dari mongodb, simpan ke cache, response
+          */
+      const postChace = await redis.get("post:all");
+
+      if (postChace) {
+        // console.log("dari redis");
+        return JSON.parse(postChace);
+      }
+
       const posts = await PostModel.getAll();
+
+      await redis.set("post:all", JSON.stringify(posts));
+
       return posts;
     },
     getPostById: async (_, { _id }) => {
@@ -64,6 +82,8 @@ const resolvers = {
         updatedAt: new Date(),
       };
       await PostModel.create(newPost);
+
+      await redis.del("post:all");
       return newPost;
     },
 
