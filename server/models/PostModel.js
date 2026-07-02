@@ -56,6 +56,10 @@ class PostModel {
   }
 
   static async comment(postId, newComment) {
+    const post = await this.collection().findOne({
+      _id: new ObjectId(postId),
+    });
+
     await this.collection().findOneAndUpdate(
       {
         _id: new ObjectId(postId),
