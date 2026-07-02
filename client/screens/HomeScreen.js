@@ -1,4 +1,11 @@
-import { View, FlatList, Text, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import styles from "../app.style";
 import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
@@ -65,9 +72,25 @@ export default function HomeScreen({ navigation }) {
 
   // console.log(data?.getPosts)
 
-  const [post, setPost] = useState([]);
+  // const [post, setPost] = useState([]);
 
   console.log(data);
+
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ActivityIndicator color={"tomato"} size={"large"} />
+        <Text>loading...</Text>
+      </View>
+    );
+  }
+
   return (
     <FlatList
       style={{ flex: 1, backgroundColor: "#F8F9FA" }}
@@ -75,30 +98,33 @@ export default function HomeScreen({ navigation }) {
         justifyContent: "center",
         paddingHorizontal: 25,
       }}
-      data={data?.getPosts}
-      keyExtractor={(item) => item.id}
-      // ListHeaderComponent={<Text style={styles.logo}>SocialApp</Text>}
+      data={data?.getPosts || []}
+      keyExtractor={(item) => item._id}
       renderItem={({ item }) => (
         <TouchableOpacity
           style={styles.postCard}
-          onPress={() => navigation.navigate("Details", { id: item.id })}
+          onPress={() => navigation.navigate("Details", { _id: item._id })}
         >
           <View style={styles.postHeader}>
             <Image
-              source={{ uri: "https://i.pravatar.cc/100" }}
+              source={{
+                uri: item.imgUrl || "https://i.pravatar.cc/150",
+              }}
               style={styles.avatar}
             />
 
-            <Text style={styles.username}>{item.username}</Text>
+            <Text style={styles.username}>{item.author.username}</Text>
           </View>
 
           <Text style={styles.postContent}>{item.content}</Text>
 
-          <Image source={{ uri: item.imgUrl }} style={styles.postImage} />
+          {item.imgUrl ? (
+            <Image source={{ uri: item.imgUrl }} style={styles.postImage} />
+          ) : null}
 
           <View style={styles.postFooter}>
-            <Text>❤️ {item.likes}</Text>
-            <Text>💬 {item.comments}</Text>
+            <Text>❤️ {item.likes.length}</Text>
+            <Text>💬 {item.comments.length}</Text>
           </View>
         </TouchableOpacity>
       )}
