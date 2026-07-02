@@ -6,6 +6,7 @@ class FollowModel {
   }
 
   static async create(newFollow) {
+    
     const result = await this.collection().insertOne(newFollow);
     // console.log(result, "result");
     newFollow._id = result.insertedId;

@@ -34,10 +34,25 @@ class PostModel {
   }
 
   static async getById(_id) {
-    const post = await this.collection().findOne({
-      _id: new ObjectId(_id),
-    });
-    return post;
+    const agg = [
+      {
+        $match: {
+          _id: new ObjectId(_id),
+        },
+      },
+      {
+        $lookup: {
+          from: "Users",
+          localField: "authorId",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+    ];
+
+    const post = await this.collection().aggregate(agg).toArray();
+
+    return post[0];
   }
 
   static async comment(postId, newComment) {
