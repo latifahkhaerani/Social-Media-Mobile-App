@@ -1,5 +1,8 @@
 import { View, FlatList, Text, TouchableOpacity, Image } from "react-native";
 import styles from "../app.style";
+import { gql } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
+import { useState } from "react";
 
 const dummyPosts = [
   {
@@ -20,7 +23,51 @@ const dummyPosts = [
   },
 ];
 
+const GET_POSTS = gql`
+  query getPost {
+    getPosts {
+      _id
+      content
+      tags
+      imgUrl
+      authorId
+      comments {
+        content
+        username
+        createdAt
+        updatedAt
+      }
+      likes {
+        username
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      author {
+        _id
+        name
+        username
+        email
+      }
+    }
+  }
+`;
+
 export default function HomeScreen({ navigation }) {
+  const { loading, error, data } = useQuery(GET_POSTS);
+
+  console.log({
+    loading,
+    error,
+    data,
+  });
+
+  // console.log(data?.getPosts)
+
+  const [post, setPost] = useState([]);
+
+  console.log(data);
   return (
     <FlatList
       style={{ flex: 1, backgroundColor: "#F8F9FA" }}
@@ -28,7 +75,7 @@ export default function HomeScreen({ navigation }) {
         justifyContent: "center",
         paddingHorizontal: 25,
       }}
-      data={dummyPosts}
+      data={data?.getPosts}
       keyExtractor={(item) => item.id}
       // ListHeaderComponent={<Text style={styles.logo}>SocialApp</Text>}
       renderItem={({ item }) => (
