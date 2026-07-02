@@ -11,25 +11,6 @@ import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
 import { useState } from "react";
 
-const dummyPosts = [
-  {
-    id: "1",
-    username: "lala",
-    content: "Belajar React Native hari ini 🚀",
-    imgUrl: "https://picsum.photos/400/250",
-    likes: 10,
-    comments: 3,
-  },
-  {
-    id: "2",
-    username: "andi",
-    content: "GraphQL ternyata enak juga dipakai.",
-    imgUrl: "https://picsum.photos/401/250",
-    likes: 25,
-    comments: 7,
-  },
-];
-
 const GET_POSTS = gql`
   query getPost {
     getPosts {
@@ -64,17 +45,13 @@ const GET_POSTS = gql`
 export default function HomeScreen({ navigation }) {
   const { loading, error, data } = useQuery(GET_POSTS);
 
-  console.log({
-    loading,
-    error,
-    data,
-  });
+  // console.log({
+  //   loading,
+  //   error,
+  //   data,
+  // });
 
   // console.log(data?.getPosts)
-
-  // const [post, setPost] = useState([]);
-
-  console.log(data);
 
   if (loading) {
     return (
@@ -85,7 +62,7 @@ export default function HomeScreen({ navigation }) {
           justifyContent: "center",
         }}
       >
-        <ActivityIndicator color={"tomato"} size={"large"} />
+        <ActivityIndicator size={"large"} />
         <Text>loading...</Text>
       </View>
     );
@@ -103,18 +80,24 @@ export default function HomeScreen({ navigation }) {
       renderItem={({ item }) => (
         <TouchableOpacity
           style={styles.postCard}
-          onPress={() => navigation.navigate("Details", { _id: item._id })}
+          onPress={() => navigation.navigate("Detail", { _id: item._id })}
         >
           <View style={styles.postHeader}>
             <Image
               source={{
-                uri: item.imgUrl || "https://i.pravatar.cc/150",
+                uri: "https://i.pravatar.cc/150",
               }}
               style={styles.avatar}
             />
 
-            <Text style={styles.username}>{item.author.username}</Text>
+            <Text style={styles.username}>{item?.author[0].username}</Text>
           </View>
+          <Image
+            source={{
+              uri: item?.imgUrl,
+            }}
+            style={styles.image}
+          />
 
           <Text style={styles.postContent}>{item.content}</Text>
 
