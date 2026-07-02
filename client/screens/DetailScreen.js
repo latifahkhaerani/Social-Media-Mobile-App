@@ -10,6 +10,10 @@ import styles from "../app.style";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "@apollo/client/react";
 import { gql } from "@apollo/client";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 const GET_DETAIL = gql`
   query GetPostById($id: ID) {
@@ -70,7 +74,9 @@ export default function DetailScreen({ route }) {
 
             <View>
               <Text style={styles.username}>{item?.author[0]?.username}</Text>
-              <Text style={styles.date}>{item?.createdAt} hours ago</Text>
+              <Text style={styles.date}>
+                {dayjs(item?.createdAt).fromNow()}
+              </Text>
             </View>
           </View>
 
