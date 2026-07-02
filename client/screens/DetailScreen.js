@@ -7,66 +7,110 @@ import {
   ScrollView,
 } from "react-native";
 import styles from "../app.style";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useQuery } from "@apollo/client/react";
+import { gql } from "@apollo/client";
 
-export default function DetailScreen() {
+const GET_DETAIL = gql`
+  query GetPostById($id: ID) {
+    getPostById(_id: $id) {
+      _id
+      content
+      tags
+      imgUrl
+      authorId
+      comments {
+        username
+        updatedAt
+        createdAt
+        content
+      }
+      likes {
+        username
+      }
+      createdAt
+      updatedAt
+      author {
+        username
+        _id
+      }
+    }
+  }
+`;
+export default function DetailScreen({ route }) {
+  const { _id } = route.params;
+  // console.log(_id);
+  const { loading, error, data } = useQuery(GET_DETAIL, {
+    variables: {
+      id: _id,
+    },
+  });
+
+  console.log(data?.getPostById);
+
+  const item = data?.getPostById;
+
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: "#F8F9FA" }}
-      contentContainerStyle={{
-        justifyContent: "center",
-        paddingHorizontal: 25,
-      }}
-    >
-      <View style={styles.card}>
-        <View style={styles.header}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView
+        style={{ flex: 1, backgroundColor: "#F8F9FA" }}
+        contentContainerStyle={{
+          justifyContent: "center",
+          paddingHorizontal: 25,
+        }}
+      >
+        <View style={styles.card}>
+          <View style={styles.header}>
+            <Image
+              source={{
+                uri: "https://i.pravatar.cc/100",
+              }}
+              style={styles.avatar}
+            />
+
+            <View>
+              <Text style={styles.username}>{item?.author[0]?.username}</Text>
+              <Text style={styles.date}>{item?.createdAt} hours ago</Text>
+            </View>
+          </View>
+
+          <Text style={styles.content}>{item?.content}</Text>
+
           <Image
             source={{
-              uri: "https://i.pravatar.cc/100",
+              uri: item?.imgUrl,
             }}
-            style={styles.avatar}
+            style={styles.image}
           />
 
-          <View>
-            <Text style={styles.username}>latifah</Text>
-            <Text style={styles.date}>2 hours ago</Text>
+          <View style={styles.info}>
+            <Text style={styles.like}>❤️ {item?.likes.length} Likes</Text>
+            <Text style={styles.comments}>
+              💬 {item?.comments?.length} Comments
+            </Text>
+
+            <Text style={styles.comments}> 🏷️ {item?.tags} </Text>
           </View>
         </View>
 
-        <Text style={styles.content}>
-          Hari ini belajar React Native dan Apollo Client. Ternyata seru juga
-          bikin aplikasi social media 🚀
-        </Text>
+        <Text style={styles.commentTitle}>Comments</Text>
 
-        <Image
-          source={{
-            uri: "https://picsum.photos/500/300",
-          }}
-          style={styles.image}
-        />
+        {item?.comments.map((c) => {
+          console.log(c);
+          return (
+            <View style={styles.commentCard}>
+              <Text style={styles.commentUser}>{c.username}</Text>
+              <Text>{c.content}</Text>
+            </View>
+          );
+        })}
 
-        <View style={styles.info}>
-          <Text style={styles.like}>❤️ 25 Likes</Text>
-          <Text style={styles.comment}>💬 7 Comments</Text>
-        </View>
-      </View>
+        <TextInput placeholder="Write a comment..." style={styles.input} />
 
-      <Text style={styles.commentTitle}>Comments</Text>
-
-      <View style={styles.commentCard}>
-        <Text style={styles.commentUser}>andi</Text>
-        <Text>Keren banget 🔥</Text>
-      </View>
-
-      <View style={styles.commentCard}>
-        <Text style={styles.commentUser}>budi</Text>
-        <Text>Semangat belajar!</Text>
-      </View>
-
-      <TextInput placeholder="Write a comment..." style={styles.input} />
-
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Send</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Send</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
