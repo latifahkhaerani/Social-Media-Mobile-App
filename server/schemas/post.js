@@ -26,7 +26,7 @@ const typeDefs = `#graphql
     likes: [Likes] 
     createdAt: String 
     updatedAt: String 
-    author: User
+    author: [User]
   }
   
   type Query {
@@ -58,6 +58,7 @@ const resolvers = {
       }
 
       const posts = await PostModel.getAll();
+      // console.log(posts)
 
       await redis.set("post:all", JSON.stringify(posts));
 

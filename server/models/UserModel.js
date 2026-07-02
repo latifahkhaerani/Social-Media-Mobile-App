@@ -58,7 +58,13 @@ class UserModel {
   }
 
   //  search: find by name/username
-  static async findByName(name = "", username = "") {
+  static async findByName(name) {
+    if (!name) {
+      return [];
+    }
+
+  
+
     const agg = [
       {
         $match: {
@@ -71,7 +77,7 @@ class UserModel {
             },
             {
               username: {
-                $regex: username,
+                $regex: name,
                 $options: "i",
               },
             },
@@ -124,9 +130,9 @@ class UserModel {
       },
     ];
 
-    const result =  await this.collection().aggregate(agg).toArray();
+    const result = await this.collection().aggregate(agg).toArray();
     // console.log(result)
-    return result[0]
+    return result[0];
   }
 }
 

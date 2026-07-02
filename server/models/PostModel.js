@@ -24,6 +24,7 @@ class PostModel {
     ];
 
     const post = await this.collection().aggregate(agg).toArray();
+
     return post;
   }
 

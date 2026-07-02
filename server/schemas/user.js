@@ -15,6 +15,7 @@ type User {
 
   type LoginResponse {
     message: String
+    _id: ID
     token: String
   }
 
@@ -37,11 +38,8 @@ const resolvers = {
       return await UserModel.findUsers();
     },
 
-    searchUser: async (_, { name, username }) => {
-      const filteredUser = await UserModel.findByName(
-        name || "",
-        username || "",
-      );
+    searchUser: async (_, { name }) => {
+      const filteredUser = await UserModel.findByName(name);
 
       return filteredUser;
     },
@@ -87,6 +85,7 @@ const resolvers = {
       );
       return {
         message: "Login success!",
+        _id: user._id,
         token,
       };
     },
