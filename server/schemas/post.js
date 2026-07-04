@@ -97,7 +97,7 @@ const resolvers = {
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-
+      await redis.del("post:all");
       return await PostModel.comment(postId, newComment);
     },
 
@@ -109,7 +109,7 @@ const resolvers = {
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-
+      await redis.del("post:all");
       return await PostModel.like(postId, newLike);
     },
   },
