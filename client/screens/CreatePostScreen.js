@@ -1,32 +1,75 @@
 import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import styles from "../app.style";
+import { gql } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
+
+const ADD_POST = gql`
+  mutation AddPost($content: String, $tags: [String], $imgUrl: String) {
+    addPost(content: $content, tags: $tags, imgUrl: $imgUrl) {
+      _id
+      content
+      tags
+      imgUrl
+      authorId
+      comments {
+        content
+        username
+        createdAt
+        updatedAt
+      }
+      likes {
+        username
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      author {
+        _id
+        name
+        username
+        email
+      }
+    }
+  }
+`;
 
 export default function CreatePostScreen({ navigation }) {
   const [content, setContent] = useState("");
   const [tags, setTags] = useState("");
   const [imgUrl, setImgUrl] = useState("");
 
-  const handleSubmit = () => {
-    if (!content) {
-      return Alert.alert("Error", "Content is required");
+  const [newPost, { loading, error, data }] = useMutation(ADD_POST, {
+    refetchQueries: ["getPost"],
+    awaitRefetchQueries: true,
+  });
+
+  const handleSubmit = async () => {
+    try {
+      if (!content) {
+        return Alert.alert("Error", "Content is required");
+      }
+
+      const addPost = await newPost({
+        variables: {
+          content: content,
+          tags: tags.split(",").map((tag) => tag.trim()),
+          imgUrl: imgUrl,
+        },
+      });
+
+      // console.log(addPost, "??");
+
+      setContent("");
+      setImgUrl("");
+      setTags("");
+      Alert.alert("Success", "Post created!");
+      navigation.navigate("Home");
+    } catch (error) {
+      console.log(error);
+      Alert.alert(error.message);
     }
-
-    console.log({
-      content,
-      tags,
-      imgUrl,
-    });
-
-    // nanti diganti mutation Apollo
-
-    Alert.alert("Success", "Post created!");
-
-    setContent("");
-    setTags("");
-    setImgUrl("");
-
-    // navigation.goBack();
   };
 
   return (
