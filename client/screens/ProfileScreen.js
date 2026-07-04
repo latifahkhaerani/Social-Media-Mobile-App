@@ -1,5 +1,9 @@
-import { View, Text, Image, FlatList } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
 import styles from "../app.style";
+import { gql } from "@apollo/client";
+import { deleteItemAsync } from "expo-secure-store";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const posts = [
   {
@@ -21,8 +25,39 @@ const posts = [
     comments: 1,
   },
 ];
+// const GET_PROFILE = gql`
+//   query GetUserById($id: ID) {
+//     getUserById(_id: $id) {
+//       _id
+//       name
+//       username
+//       email
+//       following {
+//         _id
+//         name
+//         username
+//         email
+//       }
+//       follower {
+//         _id
+//         name
+//         username
+//         email
+//       }
+//     }
+//   }
+// `;
+export default function ProfileScreen({ route }) {
+  const { setIsSignedIn } = useContext(AuthContext);
 
-export default function ProfileScreen() {
+  async function handleLogout() {
+    try {
+      await deleteItemAsync("token");
+      setIsSignedIn(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <FlatList
       style={{
@@ -76,14 +111,20 @@ export default function ProfileScreen() {
         </View>
       )}
       renderItem={({ item }) => (
-        <View style={styles.postCard}>
-          <Text style={styles.postContent}>{item.content}</Text>
+        <>
+          <View style={styles.postCard}>
+            <Text style={styles.postContent}>{item.content}</Text>
 
-          <View style={styles.postFooter}>
-            <Text>❤️ {item.likes}</Text>
-            <Text>💬 {item.comments}</Text>
+            <View style={styles.postFooter}>
+              <Text>❤️ {item.likes}</Text>
+              <Text>💬 {item.comments}</Text>
+            </View>
           </View>
-        </View>
+
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutText}>Logout</Text>
+          </TouchableOpacity>
+        </>
       )}
     />
   );
