@@ -60,7 +60,7 @@ const GET_POSTS = gql`
   }
 `;
 
-export default function ProfileScreen({ route }) {
+export default function ProfileScreen({ navigation }) {
   const { setIsSignedIn, profileID, setProfileID } = useContext(AuthContext);
 
   const { loading, error, data } = useQuery(GET_PROFILE, {
@@ -147,7 +147,10 @@ export default function ProfileScreen({ route }) {
         </View>
       )}
       renderItem={({ item }) => (
-        <View style={styles.postCard}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Detail", { _id: item._id })}
+          style={styles.postCard}
+        >
           <View style={styles.postHeader}>
             <Image
               source={{
@@ -181,7 +184,7 @@ export default function ProfileScreen({ route }) {
 
             <Text>↗</Text>
           </View>
-        </View>
+        </TouchableOpacity>
       )}
     />
   );

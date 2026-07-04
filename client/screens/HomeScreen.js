@@ -51,7 +51,6 @@ export default function HomeScreen({ navigation }) {
   //   data,
   // });
   // console.log(data?.getPosts)
-
   if (loading) {
     return (
       <View
