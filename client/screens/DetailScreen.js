@@ -5,13 +5,15 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import styles from "../app.style";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useQuery } from "@apollo/client/react";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { gql } from "@apollo/client";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useState } from "react";
 
 dayjs.extend(relativeTime);
 
@@ -41,6 +43,18 @@ const GET_DETAIL = gql`
     }
   }
 `;
+
+const ADD_COMMENT = gql`
+  mutation CommentPost($postId: ID, $content: String) {
+    commentPost(postId: $postId, content: $content) {
+      content
+      username
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export default function DetailScreen({ route }) {
   const { _id } = route.params;
   // console.log(_id);
@@ -50,9 +64,34 @@ export default function DetailScreen({ route }) {
     },
   });
 
-  console.log(data?.getPostById);
-
+  // console.log(data?.getPostById);
   const item = data?.getPostById;
+
+  // comment
+  const [myComment, setMyComment] = useState("");
+
+  const [
+    newComment,
+    { loading: loadingComment, data: dataComment, error: errorComment },
+  ] = useMutation(ADD_COMMENT);
+
+  async function handleComment() {
+    try {
+      const addComment = await newComment({
+        variables: {
+          postId: _id,
+          content: myComment,
+        },
+        refetchQueries: ["GetPostById"],
+        awaitRefetchQueries: true,
+      });
+      // console.log(addComment, "?");
+      setMyComment("");
+    } catch (error) {
+      console.log(error);
+      Alert.alert(error.message);
+    }
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -102,18 +141,23 @@ export default function DetailScreen({ route }) {
         <Text style={styles.commentTitle}>Comments</Text>
 
         {item?.comments.map((c) => {
-          console.log(c);
+          // console.log(c);
           return (
-            <View style={styles.commentCard}>
+            <View key={c._id} style={styles.commentCard}>
               <Text style={styles.commentUser}>{c.username}</Text>
               <Text>{c.content}</Text>
             </View>
           );
         })}
 
-        <TextInput placeholder="Write a comment..." style={styles.input} />
+        <TextInput
+          onChangeText={setMyComment}
+          value={myComment}
+          placeholder="Write a comment..."
+          style={styles.input}
+        />
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleComment}>
           <Text style={styles.buttonText}>Send</Text>
         </TouchableOpacity>
       </ScrollView>
