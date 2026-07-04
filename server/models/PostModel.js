@@ -92,7 +92,20 @@ class PostModel {
     });
 
     if (alreadyLiked) {
-      throw new Error("You already liked this post");
+      await this.collection().findOneAndUpdate(
+        {
+          _id: new ObjectId(postId),
+        },
+        {
+          $pull: {
+            likes: {
+              username: newLike.username,
+            },
+          },
+        },
+      );
+
+      return newLike;
     }
 
     await this.collection().findOneAndUpdate(
