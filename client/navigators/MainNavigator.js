@@ -5,16 +5,27 @@ import LoginScreen from "../screens/LoginScreen.js";
 import RegisterScreen from "../screens/RegisterScreen.js";
 import MyTabNavigator from "./MyTabNavigator.js";
 import DetailScreen from "../screens/DetailScreen.js";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext.js";
 
 const Stack = createNativeStackNavigator();
 
 export default function MainNavigator() {
+  const { isSignedIn } = useContext(AuthContext);
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="Home" component={MyTabNavigator} />
-      <Stack.Screen name="Detail" component={DetailScreen} />
+      {isSignedIn ? (
+        <>
+          <Stack.Screen name="Home" component={MyTabNavigator} />
+          <Stack.Screen name="Detail" component={DetailScreen} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+        </>
+      )}
     </Stack.Navigator>
   );
 }

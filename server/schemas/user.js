@@ -70,7 +70,7 @@ const resolvers = {
 
       const isPassValid = compareSync(password, user.password);
 
-      if (isPassValid) {
+      if (!isPassValid) {
         throw new Error("Invalid email or password");
       }
       //   console.log(process.env.JWT_SECRET);
