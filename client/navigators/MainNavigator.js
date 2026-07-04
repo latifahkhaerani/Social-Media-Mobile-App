@@ -8,6 +8,7 @@ import DetailScreen from "../screens/DetailScreen.js";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext.js";
 import ProfileScreen from "../screens/ProfileScreen.js";
+import MyDrawerNavigator from "./MyDrawerNavigator.js";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,7 +19,8 @@ export default function MainNavigator() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {isSignedIn ? (
         <>
-          <Stack.Screen name="Home" component={MyTabNavigator} />
+          {/* <Stack.Screen name="Home" component={MyTabNavigator} /> */}
+          <Stack.Screen name="Feed" component={MyDrawerNavigator} />
           <Stack.Screen name="Detail" component={DetailScreen} />
           <Stack.Screen name="UserProfile" component={ProfileScreen} />
         </>

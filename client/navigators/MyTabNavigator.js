@@ -5,6 +5,8 @@ import CreatePostScreen from "../screens/CreatePostScreen.js";
 import ProfileScreen from "../screens/ProfileScreen.js";
 import { Ionicons } from "@react-native-vector-icons/ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import MyDrawer from "./MyDrawerNavigator.js";
+import MyDrawerNavigator from "./MyDrawerNavigator.js";
 
 const Tab = createBottomTabNavigator();
 
@@ -39,9 +41,10 @@ export default function MyTabNavigator() {
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
+        {/* <Tab.Screen name="Drawer" component={MyDrawerNavigator} /> */}
         <Tab.Screen name="Search" component={SearchScreen} />
         <Tab.Screen name="Add Post" component={CreatePostScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
+        {/* <Tab.Screen name="Profile" component={ProfileScreen} /> */}
       </Tab.Navigator>
     </SafeAreaView>
   );
