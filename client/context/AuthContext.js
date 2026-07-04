@@ -5,12 +5,24 @@ export const AuthContext = createContext(null);
 
 export default function AuthContextProvider({ children }) {
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [profileID, setProfileID] = useState(null);
 
   useEffect(() => {
-    const token = getItem("token");
-    if (token) setIsSignedIn(true);
+    async function checkLogin() {
+      const token = await getItem("token");
+      const _id = await getItem("_id");
+
+      if (token) {
+        setProfileID(_id);
+        setIsSignedIn(true);
+      }
+    }
+
+    checkLogin();
   }, []);
   return (
-    <AuthContext value={{ isSignedIn, setIsSignedIn }}>{children}</AuthContext>
+    <AuthContext value={{ isSignedIn, setIsSignedIn, profileID, setProfileID }}>
+      {children}
+    </AuthContext>
   );
 }

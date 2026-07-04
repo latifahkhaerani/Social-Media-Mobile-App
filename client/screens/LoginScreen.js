@@ -20,7 +20,7 @@ const LOGIN = gql`
 `;
 
 export default function LoginScreen({ navigation }) {
-  const { setIsSignedIn } = useContext(AuthContext);
+  const { setIsSignedIn, setProfileID } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -37,12 +37,16 @@ export default function LoginScreen({ navigation }) {
 
       // console.log(result,'ress')
       const token = result.data.login.token;
+      const _id = result.data.login._id;
+      // console.log(_id, 'dari login')
 
-      setItem("token", token);
+      await setItem("token", token);
+      await setItem("_id", _id);
 
+      setProfileID(_id);
       setIsSignedIn(true);
     } catch (error) {
-      Alert.alert(err.message);
+      Alert.alert(error.message);
       console.log(error);
     }
   }
