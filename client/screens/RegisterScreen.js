@@ -46,8 +46,7 @@ export default function RegisterScreen({ navigation }) {
         },
       });
 
-      console.log(result);
-
+      // console.log(result);
       navigation.goBack("Login")
     } catch (error) {
       console.log(error);

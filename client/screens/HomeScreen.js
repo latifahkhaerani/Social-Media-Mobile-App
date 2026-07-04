@@ -44,7 +44,6 @@ const GET_POSTS = gql`
 
 export default function HomeScreen({ navigation }) {
   const { loading, error, data } = useQuery(GET_POSTS);
-
   // console.log({
   //   loading,
   //   error,
