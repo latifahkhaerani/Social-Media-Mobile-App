@@ -55,6 +55,16 @@ const ADD_COMMENT = gql`
   }
 `;
 
+const ADD_LIKE = gql`
+  mutation LikePost($postId: ID) {
+    likePost(postId: $postId) {
+      username
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export default function DetailScreen({ route }) {
   const { _id } = route.params;
   // console.log(_id);
@@ -62,6 +72,7 @@ export default function DetailScreen({ route }) {
     variables: {
       id: _id,
     },
+    // fetchPolicy: "network-only",
   });
 
   // console.log(data?.getPostById);
@@ -75,6 +86,10 @@ export default function DetailScreen({ route }) {
     { loading: loadingComment, data: dataComment, error: errorComment },
   ] = useMutation(ADD_COMMENT);
 
+  // like
+  const [newLike, { loading: loadingLike, data: dataLike, error: errorLike }] =
+    useMutation(ADD_LIKE);
+
   async function handleComment() {
     try {
       const addComment = await newComment({
@@ -87,6 +102,24 @@ export default function DetailScreen({ route }) {
       });
       // console.log(addComment, "?");
       setMyComment("");
+    } catch (error) {
+      console.log(error);
+      Alert.alert(error.message);
+    }
+  }
+
+  // like
+  async function handleLike() {
+    try {
+      const addLike = await newLike({
+        variables: {
+          postId: _id,
+        },
+        refetchQueries: ["GetPostById"],
+        awaitRefetchQueries: true,
+      });
+
+      // console.log(addLike, "like?");
     } catch (error) {
       console.log(error);
       Alert.alert(error.message);
@@ -129,7 +162,10 @@ export default function DetailScreen({ route }) {
           />
 
           <View style={styles.info}>
-            <Text style={styles.like}>❤️ {item?.likes.length} Likes</Text>
+            <TouchableOpacity onPress={handleLike}>
+              <Text style={styles.like}>❤️ {item?.likes.length} Likes</Text>
+            </TouchableOpacity>
+
             <Text style={styles.comments}>
               💬 {item?.comments?.length} Comments
             </Text>
@@ -140,10 +176,10 @@ export default function DetailScreen({ route }) {
 
         <Text style={styles.commentTitle}>Comments</Text>
 
-        {item?.comments.map((c) => {
+        {item?.comments.map((c, idx) => {
           // console.log(c);
           return (
-            <View key={c._id} style={styles.commentCard}>
+            <View key={idx} style={styles.commentCard}>
               <Text style={styles.commentUser}>{c.username}</Text>
               <Text>{c.content}</Text>
             </View>
