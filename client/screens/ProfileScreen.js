@@ -1,10 +1,17 @@
-import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import styles from "../app.style";
 import { gql } from "@apollo/client";
 import { deleteItemAsync, getItem } from "expo-secure-store";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { useQuery } from "@apollo/client/react";
+import { useMutation, useQuery } from "@apollo/client/react";
 
 const GET_PROFILE = gql`
   query GetUserById($id: ID) {
@@ -28,7 +35,6 @@ const GET_PROFILE = gql`
     }
   }
 `;
-
 const GET_POSTS = gql`
   query getPost {
     getPosts {
@@ -59,16 +65,32 @@ const GET_POSTS = gql`
     }
   }
 `;
+const FOLLOW = gql`
+  mutation Follow($followingId: ID) {
+    follow(followingId: $followingId) {
+      _id
+      followingId
+      followerId
+      createdAt
+      updatedAt
+    }
+  }
+`;
 
-export default function ProfileScreen({ navigation }) {
+export default function ProfileScreen({ route, navigation }) {
   const { setIsSignedIn, profileID, setProfileID } = useContext(AuthContext);
+
+  // from search
+  const selectedProfile = route?.params?._id;
+
+  const userId = selectedProfile || profileID;
 
   const { loading, error, data } = useQuery(GET_PROFILE, {
     variables: {
-      id: profileID,
+      id: userId,
     },
-    // Kalau profileID belum ada, query GET_PROFILE TIDAK dijalankan
-    skip: !profileID,
+    // Kalau userId belum ada, query GET_PROFILE TIDAK dijalankan
+    skip: !userId,
   });
 
   // ambil postingannya
@@ -78,10 +100,13 @@ export default function ProfileScreen({ navigation }) {
     data: postData,
   } = useQuery(GET_POSTS);
 
+  // follow
+  const [follow] = useMutation(FOLLOW);
+
   // console.log(postData?.getPosts?.filter(),'autt');
   // console.log( profileID, "id");
   const posts = postData?.getPosts?.filter((x) => {
-    return x.authorId === profileID;
+    return x.authorId === userId;
   });
 
   async function handleLogout() {
@@ -89,6 +114,29 @@ export default function ProfileScreen({ navigation }) {
       await deleteItemAsync("token");
       setIsSignedIn(false);
       setProfileID(null);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleFollow() {
+    try {
+      const result = await follow({
+        variables: {
+          followingId: selectedProfile,
+        },
+        refetchQueries: [
+          {
+            query: GET_PROFILE,
+            variables: {
+              id: userId,
+            },
+          },
+        ],
+        awaitRefetchQueries: true,
+      });
+
+      Alert.alert("followed");
     } catch (error) {
       console.log(error);
     }
@@ -120,27 +168,33 @@ export default function ProfileScreen({ navigation }) {
           <Text style={styles.profileName}>{data?.getUserById.name}</Text>
 
           <Text style={styles.profileUsername}>
-            @{data?.getUserById.username}
+            @{data?.getUserById?.username}
           </Text>
 
           <View style={styles.profileInfo}>
             <View style={styles.infoItem}>
               <Text style={styles.infoNumber}>
-                {data?.getUserById.following.length}
+                {/* {console.log(data?.getUserById, 'apaa?')} */}
+                {data?.getUserById?.following?.length}
               </Text>
               <Text>Following</Text>
             </View>
 
             <View style={styles.infoItem}>
               <Text style={styles.infoNumber}>
-                {data?.getUserById.follower.length}
+                {data?.getUserById?.follower?.length}
               </Text>
               <Text>Followers</Text>
             </View>
           </View>
 
-          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-            <Text style={styles.logoutText}>Logout</Text>
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={userId === profileID ? handleLogout : handleFollow}
+          >
+            <Text style={styles.logoutText}>
+              {userId === profileID ? "Logout" : "Follow"}
+            </Text>
           </TouchableOpacity>
 
           <Text style={styles.sectionTitle}>Posts</Text>

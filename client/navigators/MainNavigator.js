@@ -7,6 +7,7 @@ import MyTabNavigator from "./MyTabNavigator.js";
 import DetailScreen from "../screens/DetailScreen.js";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext.js";
+import ProfileScreen from "../screens/ProfileScreen.js";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,11 +20,13 @@ export default function MainNavigator() {
         <>
           <Stack.Screen name="Home" component={MyTabNavigator} />
           <Stack.Screen name="Detail" component={DetailScreen} />
+          <Stack.Screen name="UserProfile" component={ProfileScreen} />
         </>
       ) : (
         <>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
+          {/* <Stack.Screen name="Profile" component={ProfileScreen} /> */}
         </>
       )}
     </Stack.Navigator>

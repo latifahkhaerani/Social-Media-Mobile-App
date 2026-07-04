@@ -34,7 +34,7 @@ const SEARCH_USER = gql`
   }
 `;
 
-export default function SearchScreen() {
+export default function SearchScreen({ navigation }) {
   const [keyword, setKeyword] = useState("");
 
   const { loading, error, data } = useQuery(SEARCH_USER, {
@@ -61,7 +61,14 @@ export default function SearchScreen() {
         data={data?.searchUser}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.userCard}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("UserProfile", {
+                _id: item._id,
+              });
+            }}
+            style={styles.userCard}
+          >
             <Image
               source={{
                 uri: "https://i.pravatar.cc/150",
