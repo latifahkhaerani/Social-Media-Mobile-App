@@ -148,111 +148,130 @@ const styles = StyleSheet.create({
 
   postCard: {
     backgroundColor: "#fff",
-    borderRadius: 15,
-    padding: 15,
-    marginBottom: 15,
-    elevation: 4,
+    paddingVertical: 18,
+    paddingHorizontal: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EFF3F4",
+    marginBottom: 0,
   },
 
   postHeader: {
     flexDirection: "row",
     alignItems: "center",
+    marginBottom: 10,
+  },
+
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    marginRight: 12,
+  },
+
+  username: {
+    fontWeight: "700",
+    fontSize: 16,
+    color: "#0F1419",
+  },
+
+  postContent: {
+    fontSize: 17,
+    color: "#0F1419",
+    lineHeight: 24,
     marginBottom: 12,
+  },
 
-    postContent: {
-      fontSize: 15,
-      marginBottom: 12,
-    },
+  image: {
+    width: "100%",
+    height: 240,
+    borderRadius: 16,
+    marginBottom: 12,
+  },
 
-    postImage: {
-      width: "100%",
-      height: 220,
-      borderRadius: 12,
-    },
+  postFooter: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    marginTop: 5,
+    paddingVertical: 5,
+  },
 
-    postFooter: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      marginTop: 12,
-    },
+  profileHeader: {
+    alignItems: "flex-start",
+    marginBottom: 0,
+    backgroundColor: "#fff",
+  },
 
-    userCard: {
-      flexDirection: "row",
-      alignItems: "center",
-      backgroundColor: "#fff",
-      padding: 15,
-      borderRadius: 15,
-      marginBottom: 12,
-    },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 4,
+    borderColor: "#fff",
+    marginBottom: 18,
+  },
 
-    userUsername: {
-      color: "#777",
-      marginTop: 3,
-    },
+  profileName: {
+    fontSize: 28,
+    fontWeight: "800",
+    color: "#0F1419",
+  },
 
-    followButton: {
-      backgroundColor: "#0095F6",
-      paddingHorizontal: 18,
-      paddingVertical: 10,
-      borderRadius: 20,
-    },
+  profileUsername: {
+    fontSize: 16,
+    color: "#536471",
+    marginTop: 2,
+  },
 
-    followText: {
-      color: "white",
-      fontWeight: "bold",
-    },
-    profileHeader: {
-      alignItems: "center",
-      marginBottom: 25,
-    },
+  profileInfo: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    width: "100%",
+    marginTop: 22,
+    marginBottom: 22,
+  },
 
-    profileImage: {
-      width: 120,
-      height: 120,
-      borderRadius: 60,
-      marginBottom: 15,
-    },
+  infoItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 22,
+  },
 
-    profileName: {
-      fontSize: 28,
-      fontWeight: "bold",
-    },
+  infoNumber: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#0F1419",
+    marginRight: 5,
+  },
 
-    profileUsername: {
-      fontSize: 16,
-      color: "#666",
-      marginTop: 5,
-    },
+  sectionTitle: {
+    alignSelf: "flex-start",
+    fontSize: 17,
+    fontWeight: "700",
+    color: "#0F1419",
+    paddingVertical: 16,
+    paddingHorizontal: 15,
+    borderBottomWidth: 4,
+    borderBottomColor: "#1D9BF0",
+    marginBottom: 0,
+  },
 
-    bio: {
-      textAlign: "center",
-      color: "#666",
-      marginTop: 10,
-      lineHeight: 22,
-    },
+  logoutButton: {
+    borderWidth: 1,
+    borderColor: "#CFD9DE",
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
+    alignItems: "center",
+    alignSelf: "flex-end",
+    marginTop: 15,
+    marginBottom: 10,
+  },
 
-    profileInfo: {
-      flexDirection: "row",
-      justifyContent: "space-around",
-      width: "100%",
-      marginVertical: 25,
-    },
-
-    infoItem: {
-      alignItems: "center",
-    },
-
-    infoNumber: {
-      fontSize: 22,
-      fontWeight: "bold",
-    },
-
-    sectionTitle: {
-      alignSelf: "flex-start",
-      fontSize: 22,
-      fontWeight: "bold",
-      marginBottom: 15,
-    },
+  logoutText: {
+    color: "#0F1419",
+    fontSize: 15,
+    fontWeight: "700",
   },
 });
 

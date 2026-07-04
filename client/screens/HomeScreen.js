@@ -50,7 +50,6 @@ export default function HomeScreen({ navigation }) {
   //   error,
   //   data,
   // });
-
   // console.log(data?.getPosts)
 
   if (loading) {
