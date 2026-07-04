@@ -8,34 +8,43 @@ import {
   View,
 } from "react-native";
 import styles from "../app.style";
+import { gql } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client/react";
+
+const SEARCH_USER = gql`
+  query SearchUser($name: String) {
+    searchUser(name: $name) {
+      _id
+      name
+      username
+      email
+      following {
+        _id
+        name
+        username
+        email
+      }
+      follower {
+        _id
+        name
+        username
+        email
+      }
+    }
+  }
+`;
 
 export default function SearchScreen() {
   const [keyword, setKeyword] = useState("");
 
-  // dummy data
-  const users = [
-    {
-      _id: "1",
-      name: "Lala",
-      username: "Lala",
+  const { loading, error, data } = useQuery(SEARCH_USER, {
+    variables: {
+      name: keyword,
     },
-    {
-      _id: "2",
-      name: "Andi",
-      username: "andi",
-    },
-    {
-      _id: "3",
-      name: "Budi",
-      username: "budii",
-    },
-  ];
+    skip: keyword.trim() === "",
+  });
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(keyword.toLowerCase()) ||
-      user.username.toLowerCase().includes(keyword.toLowerCase()),
-  );
+  // console.log(data?.searchUser);
 
   return (
     <View style={styles.container}>
@@ -49,7 +58,7 @@ export default function SearchScreen() {
       />
 
       <FlatList
-        data={filteredUsers}
+        data={data?.searchUser}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.userCard}>
