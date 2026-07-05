@@ -8,11 +8,12 @@ import {
 } from "react-native";
 import styles from "../app.style";
 import { gql } from "@apollo/client";
-import { useQuery } from "@apollo/client/react";
-import { useState } from "react";
+import { useMutation, useQuery } from "@apollo/client/react";
+import { useContext, useState } from "react";
 import { Ionicons } from "@react-native-vector-icons/ionicons";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { AuthContext } from "../context/AuthContext";
 dayjs.extend(relativeTime);
 
 const GET_POSTS = gql`
@@ -46,7 +47,43 @@ const GET_POSTS = gql`
   }
 `;
 
+const ADD_LIKE = gql`
+  mutation LikePost($postId: ID) {
+    likePost(postId: $postId) {
+      username
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+const GET_PROFILE = gql`
+  query GetUserById($id: ID) {
+    getUserById(_id: $id) {
+      _id
+      name
+      username
+      email
+      following {
+        _id
+        name
+        username
+        email
+      }
+      follower {
+        _id
+        name
+        username
+        email
+      }
+    }
+  }
+`;
+
 export default function HomeScreen({ navigation }) {
+  // like by me
+  const { profileID } = useContext(AuthContext);
+
   const { loading, error, data } = useQuery(GET_POSTS);
   // console.log({
   //   loading,
@@ -54,7 +91,39 @@ export default function HomeScreen({ navigation }) {
   //   data,
   // });
   // console.log(data?.getPosts)
-  if (loading) {
+
+  // like by me
+  const { data: profileData } = useQuery(GET_PROFILE, {
+    variables: {
+      id: profileID,
+    },
+    skip: !profileID,
+  });
+
+  // like
+  const usernameLogin = profileData?.getUserById?.username;
+
+  const [newLike, { loading: loadingLike, data: dataLike, error: errorLike }] =
+    useMutation(ADD_LIKE);
+
+  async function handleLike(postId) {
+    try {
+      const addLike = await newLike({
+        variables: {
+          postId,
+        },
+        refetchQueries: ["getPost"],
+        awaitRefetchQueries: true,
+      });
+
+      console.log(addLike, "like?");
+    } catch (error) {
+      console.log(error);
+      Alert.alert(error.message);
+    }
+  }
+
+  if (loading && !data) {
     return (
       <View
         style={{
@@ -84,99 +153,113 @@ export default function HomeScreen({ navigation }) {
           }}
           data={data?.getPosts || []}
           keyExtractor={(item) => item._id}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Detail", {
-                  _id: item._id,
-                })
-              }
-              style={{
-                paddingHorizontal: 16,
-                paddingVertical: 16,
-                borderBottomWidth: 1,
-                borderBottomColor: "#e5e7eb",
-                backgroundColor: "#fff",
-              }}
-            >
-              <View style={styles.postHeader}>
-                <Image
-                  source={{
-                    uri: "https://i.pravatar.cc/150",
-                  }}
-                  style={styles.avatar}
-                />
+          renderItem={({ item }) => {
+            const isLiked = item.likes.some(
+              (like) => like.username === usernameLogin,
+            );
 
-                <View style={{ flex: 1 }}>
-                  {/* username */}
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 5,
-                      alignItems: "center",
+            return (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("Detail", {
+                    _id: item._id,
+                  })
+                }
+                style={{
+                  paddingHorizontal: 16,
+                  paddingVertical: 16,
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#e5e7eb",
+                  backgroundColor: "#fff",
+                }}
+              >
+                <View style={styles.postHeader}>
+                  <Image
+                    source={{
+                      uri: "https://i.pravatar.cc/150",
                     }}
-                  >
+                    style={styles.avatar}
+                  />
+
+                  <View style={{ flex: 1 }}>
+                    {/* username */}
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        gap: 5,
+                        alignItems: "center",
+                      }}
+                    >
+                      <Text
+                        style={[
+                          styles.username,
+                          {
+                            fontSize: 18,
+                          },
+                        ]}
+                      >
+                        {item?.author[0].name}
+                      </Text>
+
+                      <Text style={styles.date}>
+                        @{item?.author[0].username}
+                      </Text>
+
+                      <Text style={styles.date}>
+                        •{dayjs().diff(dayjs(item?.createdAt), "hour")}h
+                      </Text>
+                    </View>
+
+                    {/* caption */}
                     <Text
                       style={[
-                        styles.username,
+                        styles.postContent,
                         {
-                          fontSize: 18,
+                          marginTop: 3,
+                          marginBottom: 10,
                         },
                       ]}
                     >
-                      {item?.author[0].name}
-                    </Text>
-
-                    <Text style={styles.date}>@{item?.author[0].username}</Text>
-
-                    <Text style={styles.date}>
-                      •{dayjs().diff(dayjs(item?.createdAt), "hour")}h
+                      {item.content}
                     </Text>
                   </View>
+                </View>
 
-                  {/* caption */}
-                  <Text
+                {item.imgUrl ? (
+                  <Image
+                    source={{ uri: item.imgUrl }}
                     style={[
-                      styles.postContent,
+                      styles.postImage,
                       {
-                        marginTop: 3,
-                        marginBottom: 10,
+                        marginLeft: 53,
+                        width: "83%",
+                        height: 200,
+                        borderRadius: 16,
                       },
                     ]}
-                  >
-                    {item.content}
+                  />
+                ) : null}
+                <View style={styles.postFooter}>
+                  <Text>
+                    {" "}
+                    <Ionicons name="chatbubble-outline" size={15} />{" "}
+                    {item.comments.length}
                   </Text>
+
+                  <TouchableOpacity onPress={() => handleLike(item._id)}>
+                    <Text>
+                      <Ionicons
+                        name={isLiked ? "heart" : "heart-outline"}
+                        size={15}
+                        color={isLiked ? "red" : "#657786"}
+                      />{" "}
+                      {item.likes.length}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
-              </View>
-
-              {item.imgUrl ? (
-                <Image
-                  source={{ uri: item.imgUrl }}
-                  style={[
-                    styles.postImage,
-                    {
-                      marginLeft: 53,
-                      width: "83%",
-                      height: 200,
-                      borderRadius: 16,
-                    },
-                  ]}
-                />
-              ) : null}
-              <View style={styles.postFooter}>
-                <Text>
-                  {" "}
-                  <Ionicons name="chatbubble-outline" size={15} />{" "}
-                  {item.comments.length}
-                </Text>
-
-                <Text>
-                  <Ionicons name="heart-outline" size={15} />{" "}
-                  {item.likes.length}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          )}
+              </TouchableOpacity>
+            );
+          }}
         />
         {/* add post */}
 
