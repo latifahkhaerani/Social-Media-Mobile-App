@@ -29,7 +29,7 @@ const GET_PROFILE = gql`
   }
 `;
 
-export default function FollowerList({ route, navigation }) {
+export default function FollowingList({ route, navigation }) {
   const { profileID } = useContext(AuthContext);
 
   // kalau ada id yang dikirim, pakai id itu
@@ -56,7 +56,7 @@ export default function FollowerList({ route, navigation }) {
 
   const user = data?.getUserById;
 
-  const followers = user?.follower || [];
+  const following = user?.following || [];
 
   if (loading && !data) {
     return (
@@ -118,9 +118,37 @@ export default function FollowerList({ route, navigation }) {
           borderBottomColor: "#EFF3F4",
         }}
       >
+        {/* following */}
+        <TouchableOpacity
+          style={{
+            flex: 1,
+            alignItems: "center",
+            paddingVertical: 15,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "700",
+            }}
+          >
+            Following
+          </Text>
+
+          <View
+            style={{
+              position: "absolute",
+              bottom: 0,
+              width: 100,
+              height: 4,
+              borderRadius: 10,
+              backgroundColor: "#1D9BF0",
+            }}
+          />
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
-            navigation.replace("Followings", {
+            navigation.replace("Followers", {
               _id: userId,
             })
           }
@@ -136,42 +164,14 @@ export default function FollowerList({ route, navigation }) {
               color: "#536471",
             }}
           >
-            Following
-          </Text>
-        </TouchableOpacity>
-        {/* follower */}
-        <TouchableOpacity
-          style={{
-            flex: 1,
-            alignItems: "center",
-            paddingVertical: 15,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: "700",
-            }}
-          >
             Followers
           </Text>
-
-          <View
-            style={{
-              position: "absolute",
-              bottom: 0,
-              width: 100,
-              height: 4,
-              borderRadius: 10,
-              backgroundColor: "#1D9BF0",
-            }}
-          />
         </TouchableOpacity>
       </View>
 
-      {/* follower list */}
+      {/* following list */}
       <UserList
-        data={followers}
+        data={following}
         navigation={navigation}
         myFollowing={myFollowing}
       />

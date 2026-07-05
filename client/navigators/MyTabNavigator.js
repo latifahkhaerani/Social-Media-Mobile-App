@@ -7,8 +7,45 @@ import { Ionicons } from "@react-native-vector-icons/ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyDrawer from "./MyDrawerNavigator.js";
 import MyDrawerNavigator from "./MyDrawerNavigator.js";
+import DetailScreen from "../screens/DetailScreen.js";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import FollowerList from "../screens/FollowerList.js";
+import FollowingList from "../screens/FollowingList.js";
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+function HomeStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen
+        name="Detail"
+        component={DetailScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen
+        name="Followers"
+        component={FollowerList}
+        options={{
+          headerShown: false,
+          animation: "none",
+        }}
+      />
+      <Stack.Screen
+        name="Followings"
+        component={FollowingList}
+        options={{
+          headerShown: false,
+          animation: "none",
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
 
 export default function MyTabNavigator() {
   return (
@@ -40,11 +77,10 @@ export default function MyTabNavigator() {
           },
         })}
       >
-        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Home" component={HomeStack} />
         {/* <Tab.Screen name="Drawer" component={MyDrawerNavigator} /> */}
         <Tab.Screen name="Search" component={SearchScreen} />
         {/* <Tab.Screen name="Add Post" component={CreatePostScreen} /> */}
-        <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     </SafeAreaView>
   );

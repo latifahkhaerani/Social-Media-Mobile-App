@@ -48,14 +48,32 @@ export default function CustomDrawerContent(props) {
         <Text style={styles.username}>@{user?.username}</Text>
 
         <View style={styles.followContainer}>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate("MainTabs", {
+                screen: "Home",
+                params: {
+                  screen: "Followings",
+                },
+              });
+            }}
+          >
             <Text style={styles.followText}>
               <Text style={styles.number}>{user?.following?.length || 0}</Text>{" "}
               Following
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate("MainTabs", {
+                screen: "Home",
+                params: {
+                  screen: "Followers",
+                },
+              });
+            }}
+          >
             <Text style={styles.followText}>
               <Text style={styles.number}>{user?.follower?.length || 0}</Text>{" "}
               Followers
@@ -67,7 +85,10 @@ export default function CustomDrawerContent(props) {
           style={styles.menu}
           onPress={() =>
             props.navigation.navigate("MainTabs", {
-              screen: "Profile",
+              screen: "Home",
+              params: {
+                screen: "Profile",
+              },
             })
           }
         >
