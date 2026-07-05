@@ -202,12 +202,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // justifyContent: "start",
     alignItems: "center",
-    marginLeft: 25,
-    gap: 40,
+    gap: 38,
     borderTop: 5,
     borderColor: "black",
-    // paddingVertical: 5,
+    paddingTop: 15,
     fontSize: "bold",
+    borderTopWidth: 1,
+    borderTopColor: "#d1d1d1",
   },
 
   profileHeader: {
