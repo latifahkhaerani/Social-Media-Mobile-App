@@ -211,17 +211,22 @@ export default function HomeScreen({ navigation }) {
                     </View>
 
                     {/* caption */}
-                    <Text
-                      style={[
-                        styles.postContent,
-                        {
-                          marginTop: 3,
-                          marginBottom: 10,
-                        },
-                      ]}
-                    >
+                    <Text style={{ fontSize: 16, marginTop: 5 }}>
                       {item.content}
                     </Text>
+                    {/* TAGS */}
+                    {item?.tags?.length > 0 ? (
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          color: "#1f99f0",
+                          lineHeight: 24,
+                          marginBottom: 10,
+                        }}
+                      >
+                        {item.tags.map((tag) => `#${tag}`).join(" ")}
+                      </Text>
+                    ) : null}
                   </View>
                 </View>
 
