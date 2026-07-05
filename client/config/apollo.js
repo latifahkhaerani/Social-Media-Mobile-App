@@ -4,7 +4,7 @@ import { SetContextLink } from "@apollo/client/link/context";
 import { getItem } from "expo-secure-store";
 
 const httpLink = new HttpLink({
-  uri: "https://tm3hdgc5-3000.asse.devtunnels.ms/",
+  uri: "https://mobile-app.latifahkhaerani.my.id/",
 });
 
 const authLink = new SetContextLink(({ headers }) => {
