@@ -206,11 +206,17 @@ export default function DetailScreen({ route, navigation }) {
           }}
         >
           {/* AUTHOR */}
-          <View
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("UserProfile", {
+                _id: item?.author[0]?._id,
+              })
+            }
+            activeOpacity={0.7}
             style={{
               flexDirection: "row",
               alignItems: "center",
-              gap: 10,
+              gap: 3,
             }}
           >
             <Image
@@ -225,20 +231,39 @@ export default function DetailScreen({ route, navigation }) {
 
               <Text style={styles.date}>@{item?.author[0]?.username}</Text>
             </View>
-          </View>
+          </TouchableOpacity>
 
           {/* CONTENT */}
-          <Text
-            style={[
-              styles.content,
-              {
-                marginTop: 18,
-                marginBottom: 15,
-              },
-            ]}
+          <View
+            style={{
+              marginTop: 18,
+              marginBottom: 15,
+            }}
           >
-            {item?.content}
-          </Text>
+            <Text
+              style={[
+                styles.content,
+                {
+                  marginBottom: 3,
+                },
+              ]}
+            >
+              {item?.content}
+            </Text>
+
+            {/* TAGS */}
+            {item?.tags?.length > 0 ? (
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "#1f99f0",
+                  lineHeight: 24,
+                }}
+              >
+                {item.tags.map((tag) => `#${tag}`).join(" ")}
+              </Text>
+            ) : null}
+          </View>
 
           {/* IMAGE */}
           {item?.imgUrl ? (
@@ -296,11 +321,6 @@ export default function DetailScreen({ route, navigation }) {
                 {item?.likes?.length}
               </Text>
             </TouchableOpacity>
-
-            <Text style={styles.profileUsername}>
-              <Ionicons name="pricetag-outline" size={20} color="#566573" />{" "}
-              {item?.tags}
-            </Text>
           </View>
         </View>
 
