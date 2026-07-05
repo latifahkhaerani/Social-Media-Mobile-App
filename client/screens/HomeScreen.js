@@ -206,7 +206,20 @@ export default function HomeScreen({ navigation }) {
                       </Text>
 
                       <Text style={styles.date}>
-                        •{dayjs().diff(dayjs(item?.createdAt), "hour")}h
+                        •{" "}
+                        {dayjs(Number(item?.createdAt))
+                          .fromNow(true)
+                          .replace("a few seconds", "now")
+                          .replace("a minute", "1m")
+                          .replace(/(\d+) minutes?/, "$1m")
+                          .replace("an hour", "1h")
+                          .replace(/(\d+) hours?/, "$1h")
+                          .replace("a day", "1d")
+                          .replace(/(\d+) days?/, "$1d")
+                          .replace("a month", "1mo")
+                          .replace(/(\d+) months?/, "$1mo")
+                          .replace("a year", "1y")
+                          .replace(/(\d+) years?/, "$1y")}
                       </Text>
                     </View>
 
