@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  Image,
+} from "react-native";
 import styles from "../app.style";
 import { gql } from "@apollo/client";
 import { useMutation, useQuery } from "@apollo/client/react";
@@ -79,7 +86,7 @@ export default function CreatePostScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={{ flex: 1, justifyContent: "space-between", height: 100 }}>
         <View>
           {/* button */}
@@ -112,7 +119,14 @@ export default function CreatePostScreen({ navigation }) {
             </TouchableOpacity>
           </View>
           {/* content */}
-          <View>
+
+          <View style={{ flexDirection: "row", marginLeft: 12 }}>
+            <Image
+              source={{
+                uri: "https://i.pravatar.cc/200",
+              }}
+              style={[styles.avatar]}
+            />
             <TextInput
               placeholder="What's happening?"
               multiline
@@ -121,34 +135,19 @@ export default function CreatePostScreen({ navigation }) {
               onChangeText={setContent}
               style={{ fontSize: 18 }}
             />
-
-            {/* <TextInput
-              placeholder="Tags (optional)"
-              value={tags}
-              onChangeText={setTags}
-              style={styles.input}
-            />
-
-            <TextInput
-              placeholder="Image URL (optional)"
-              value={imgUrl}
-              onChangeText={setImgUrl}
-              style={styles.input}
-            /> */}
           </View>
         </View>
         {/* tabs */}
-        {/* <View style={styles.addpostFooter}>
-          <Ionicons name="image-outline" size={20} color={"#1f99f0"} />
-          <Ionicons name="pricetags-outline" size={20} color={"#1f99f0"} />
-        </View> */}
         <View style={styles.addpostFooter}>
-          <TouchableOpacity onPress={() => setOpenModal("image")}>
+          <TouchableOpacity
+            style={{ marginLeft: 25 }}
+            onPress={() => setOpenModal("image")}
+          >
             <Ionicons name="image-outline" size={20} color="#1f99f0" />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => setOpenModal("tags")}>
-            <Ionicons name="pricetags-outline" size={20} color="#1f99f0" />
+            <Ionicons name="pricetags-outline" size={19} color="#1f99f0" />
           </TouchableOpacity>
         </View>
       </View>
