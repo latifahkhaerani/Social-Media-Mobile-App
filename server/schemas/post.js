@@ -6,6 +6,7 @@ const typeDefs = `#graphql
     type Comments {
     content: String
     username: String
+    name: String
     createdAt: String 
     updatedAt: String 
     }
@@ -64,7 +65,9 @@ const resolvers = {
 
       return posts;
     },
-    getPostById: async (_, { _id }) => {
+    getPostById: async (_, { _id }, { authentication }) => {
+      const loginInfo = await authentication();
+      console.log(loginInfo.name)
       return await PostModel.getById(_id);
     },
   },
@@ -90,10 +93,11 @@ const resolvers = {
 
     commentPost: async (_, { postId, content }, { authentication }) => {
       const loginInfo = await authentication();
-
+      
       const newComment = {
         content,
         username: loginInfo.username,
+        name: loginInfo.name,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
