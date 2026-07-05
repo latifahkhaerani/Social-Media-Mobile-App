@@ -52,35 +52,165 @@ export default function LoginScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "#fff",
+        paddingHorizontal: 22,
+        paddingTop: 45,
+        paddingBottom: 25,
+      }}
+    >
       <StatusBar style="dark" />
 
-      <Text style={styles.logo}>SocialApp</Text>
-      <Text style={styles.subtitle}>Welcome Back </Text>
+      {/* CONTENT */}
+      <View>
+        {/* TITLE */}
+        <Text
+          style={[
+            styles.logo,
+            {
+              textAlign: "left",
+              fontSize: 38,
+              marginTop: 55,
+              marginBottom: 12,
+            },
+          ]}
+        >
+          Log in to X
+        </Text>
 
-      <View style={styles.card}>
+        <Text
+          style={[
+            styles.profileUsername,
+            {
+              fontSize: 18,
+              marginBottom: 45,
+            },
+          ]}
+        >
+          Continue with your existing account
+        </Text>
+
+        {/* EMAIL */}
         <TextInput
           onChangeText={(text) => setEmail(text)}
-          placeholder="Email"
-          style={styles.input}
-          placeholderTextColor="#999"
+          value={email}
+          placeholder="lala@example.com"
+          placeholderTextColor="#b0b0b0"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          style={{
+            fontSize: 25,
+            color: "#0F1419",
+            paddingVertical: 15,
+            borderBottomWidth: 1,
+            borderBottomColor: "#EFF3F4",
+            marginBottom: 20,
+          }}
         />
 
+        {/* PASSWORD */}
         <TextInput
-          placeholder="Password"
-          secureTextEntry
-          style={styles.input}
-          placeholderTextColor="#999"
           onChangeText={(text) => setPassword(text)}
+          value={password}
+          placeholder="enter your password"
+          placeholderTextColor="#b0b0b0"
+          secureTextEntry
+          style={{
+            fontSize: 25,
+            color: "#0F1419",
+            paddingVertical: 15,
+            borderBottomWidth: 1,
+            borderBottomColor: "#EFF3F4",
+          }}
         />
+      </View>
 
-        <TouchableOpacity style={styles.button} onPress={handleSubmitLogin}>
-          <Text style={styles.buttonText}>Login</Text>
+      {/* BOTTOM */}
+      <View
+        style={{
+          marginTop: "auto",
+          marginBottom: 20,
+        }}
+      >
+        <TouchableOpacity
+          onPress={handleSubmitLogin}
+          style={{
+            backgroundColor: "#000",
+            borderRadius: 100,
+            paddingVertical: 16,
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              {
+                fontSize: 20,
+              },
+            ]}
+          >
+            Continue
+          </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-          <Text style={styles.register}>
-            Don't have an account? <Text style={styles.link}>Register</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginVertical: 25,
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              height: 1,
+              backgroundColor: "#CFD9DE",
+            }}
+          />
+
+          <Text
+            style={[
+              styles.profileUsername,
+              {
+                marginHorizontal: 12,
+              },
+            ]}
+          >
+            OR
+          </Text>
+
+          <View
+            style={{
+              flex: 1,
+              height: 1,
+              backgroundColor: "#CFD9DE",
+            }}
+          />
+        </View>
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Register")}
+          style={[
+            styles.logoutButton,
+            {
+              alignSelf: "stretch",
+              marginTop: 0,
+              marginBottom: 0,
+              paddingVertical: 15,
+            },
+          ]}
+        >
+          <Text
+            style={[
+              styles.logoutText,
+              {
+                fontSize: 18,
+              },
+            ]}
+          >
+            Create a new account
           </Text>
         </TouchableOpacity>
       </View>
