@@ -96,18 +96,13 @@ const ADD_LIKE = gql`
 `;
 
 export default function ProfileScreen({ route, navigation }) {
-  const { setIsSignedIn, profileID, setProfileID } =
-    useContext(AuthContext);
+  const { setIsSignedIn, profileID, setProfileID } = useContext(AuthContext);
 
   const selectedProfile = route?.params?._id;
 
   const userId = selectedProfile || profileID;
 
-  const {
-    loading,
-    error,
-    data,
-  } = useQuery(GET_PROFILE, {
+  const { loading, error, data } = useQuery(GET_PROFILE, {
     variables: {
       id: userId,
     },
@@ -133,8 +128,7 @@ export default function ProfileScreen({ route, navigation }) {
 
   const user = data?.getUserById;
 
-  const usernameLogin =
-    myProfileData?.getUserById?.username;
+  const usernameLogin = myProfileData?.getUserById?.username;
 
   const posts =
     postData?.getPosts?.filter((post) => {
@@ -143,12 +137,11 @@ export default function ProfileScreen({ route, navigation }) {
 
   const isMyProfile = userId === profileID;
 
-  const isFollowing =
-    myProfileData?.getUserById?.following?.some(
-      (followingUser) => {
-        return followingUser._id === userId;
-      },
-    );
+  const isFollowing = myProfileData?.getUserById?.following?.some(
+    (followingUser) => {
+      return followingUser._id === userId;
+    },
+  );
 
   async function handleLogout() {
     try {
@@ -222,204 +215,29 @@ export default function ProfileScreen({ route, navigation }) {
   }
 
   return (
-    <FlatList
-      style={{
-        flex: 1,
-        backgroundColor: "#fff",
-      }}
-      contentContainerStyle={{
-        paddingBottom: 30,
-      }}
-      showsVerticalScrollIndicator={false}
-      data={posts}
-      keyExtractor={(item) => item._id}
-      ListHeaderComponent={
-        <View>
-          {/* profile header */}
-
-          <View
-            style={{
-              paddingHorizontal: 20,
-              paddingTop: 25,
-              paddingBottom: 20,
-            }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Image
-                source={{
-                  uri: "https://i.pravatar.cc/200",
-                }}
-                style={{
-                  width: 82,
-                  height: 82,
-                  borderRadius: 41,
-                }}
-              />
-
-              <TouchableOpacity
-                onPress={
-                  isMyProfile
-                    ? handleLogout
-                    : handleFollow
-                }
-                style={{
-                  minWidth: 120,
-                  height: 44,
-                  paddingHorizontal: 24,
-                  borderRadius: 25,
-                  backgroundColor: "#0F1419",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#fff",
-                    fontSize: 16,
-                    fontWeight: "700",
-                  }}
-                >
-                  {isMyProfile
-                    ? "Logout"
-                    : isFollowing
-                      ? "Following"
-                      : "Follow"}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <Text
-              style={{
-                fontSize: 27,
-                fontWeight: "800",
-                color: "#0F1419",
-                marginTop: 16,
-              }}
-              numberOfLines={1}
-            >
-              {user?.name}
-            </Text>
-
-            <Text
-              style={{
-                fontSize: 17,
-                color: "#536471",
-                marginTop: 2,
-              }}
-              numberOfLines={1}
-            >
-              @{user?.username}
-            </Text>
-
-            {/* following follower */}
-
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginTop: 20,
-                gap: 20,
-              }}
-            >
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("Followings", {
-                    _id: userId,
-                  })
-                }
-              >
-                <Text
-                  style={{
-                    fontSize: 16,
-                    color: "#536471",
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#0F1419",
-                      fontWeight: "700",
-                    }}
-                  >
-                    {user?.following?.length || 0}
-                  </Text>{" "}
-                  Following
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("Followers", {
-                    _id: userId,
-                  })
-                }
-              >
-                <Text
-                  style={{
-                    fontSize: 16,
-                    color: "#536471",
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#0F1419",
-                      fontWeight: "700",
-                    }}
-                  >
-                    {user?.follower?.length || 0}
-                  </Text>{" "}
-                  Followers
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {/* posts tab */}
-
-          <View
-            style={{
-              height: 55,
-              borderBottomWidth: 1,
-              borderBottomColor: "#EFF3F4",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "700",
-                color: "#0F1419",
-              }}
-            >
-              Posts
-            </Text>
-
-            <View
-              style={{
-                position: "absolute",
-                bottom: 0,
-                width: 65,
-                height: 4,
-                borderRadius: 10,
-                backgroundColor: "#1D9BF0",
-              }}
-            />
-          </View>
-        </View>
-      }
-      ListEmptyComponent={
-        <View
+    <View style={{ flex: 1, backgroundColor: "#fff" }}>
+      {/* HEADER STATIS */}
+      <View
+        style={{
+          height: 60,
+          flexDirection: "row",
+          alignItems: "center",
+          paddingHorizontal: 16,
+          borderBottomWidth: 1,
+          borderBottomColor: "#EFF3F4",
+          backgroundColor: "#fff",
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
           style={{
-            alignItems: "center",
-            paddingVertical: 60,
+            marginRight: 18,
           }}
         >
+          <Ionicons name="arrow-back" size={26} color="#0F1419" />
+        </TouchableOpacity>
+
+        <View>
           <Text
             style={{
               fontSize: 20,
@@ -427,196 +245,404 @@ export default function ProfileScreen({ route, navigation }) {
               color: "#0F1419",
             }}
           >
-            No posts yet
+            {data?.getUserById?.name}
           </Text>
-        </View>
-      }
-      renderItem={({ item }) => {
-        const isLiked = item.likes.some((like) => {
-          return like.username === usernameLogin;
-        });
 
-        return (
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() =>
-              navigation.navigate("Detail", {
-                _id: item._id,
-              })
-            }
+          <Text
             style={{
-              paddingHorizontal: 16,
-              paddingVertical: 16,
-              borderBottomWidth: 1,
-              borderBottomColor: "#EFF3F4",
-              backgroundColor: "#fff",
+              fontSize: 13,
+              color: "#536471",
             }}
           >
+            {posts?.length || 0} posts
+          </Text>
+        </View>
+      </View>
+
+      <FlatList
+        style={{
+          flex: 1,
+          backgroundColor: "#fff",
+        }}
+        contentContainerStyle={{
+          paddingBottom: 30,
+        }}
+        showsVerticalScrollIndicator={false}
+        data={posts}
+        keyExtractor={(item) => item._id}
+        ListHeaderComponent={
+          <View>
+            {/* profile header */}
+
             <View
               style={{
-                flexDirection: "row",
-                alignItems: "flex-start",
+                paddingHorizontal: 20,
+                paddingTop: 25,
+                paddingBottom: 20,
               }}
             >
-              <Image
-                source={{
-                  uri: "https://i.pravatar.cc/150",
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
-                style={styles.avatar}
-              />
+              >
+                <Image
+                  source={{
+                    uri: "https://i.pravatar.cc/200",
+                  }}
+                  style={{
+                    width: 82,
+                    height: 82,
+                    borderRadius: 41,
+                  }}
+                />
+
+                <TouchableOpacity
+                  onPress={isMyProfile ? handleLogout : handleFollow}
+                  style={{
+                    minWidth: 120,
+                    height: 44,
+                    paddingHorizontal: 24,
+                    borderRadius: 25,
+                    backgroundColor: "#0F1419",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "#fff",
+                      fontSize: 16,
+                      fontWeight: "700",
+                    }}
+                  >
+                    {isMyProfile
+                      ? "Logout"
+                      : isFollowing
+                        ? "Following"
+                        : "Follow"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <Text
+                style={{
+                  fontSize: 27,
+                  fontWeight: "800",
+                  color: "#0F1419",
+                  marginTop: 16,
+                }}
+                numberOfLines={1}
+              >
+                {user?.name}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 17,
+                  color: "#536471",
+                  marginTop: 2,
+                }}
+                numberOfLines={1}
+              >
+                @{user?.username}
+              </Text>
+
+              {/* following follower */}
 
               <View
                 style={{
-                  flex: 1,
-                  marginLeft: 10,
-                  minWidth: 0,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginTop: 20,
+                  gap: 20,
                 }}
               >
-                {/* name username time */}
-
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                  }}
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Followings", {
+                      _id: userId,
+                    })
+                  }
                 >
                   <Text
                     style={{
-                      fontSize: 17,
-                      fontWeight: "700",
-                      color: "#0F1419",
-                      marginRight: 5,
-                    }}
-                    numberOfLines={1}
-                  >
-                    {item?.author[0]?.name}
-                  </Text>
-
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      color: "#536471",
-                      flexShrink: 1,
-                    }}
-                    numberOfLines={1}
-                  >
-                    @{item?.author[0]?.username}
-                  </Text>
-
-                  <Text
-                    style={{
-                      fontSize: 15,
+                      fontSize: 16,
                       color: "#536471",
                     }}
                   >
-                    {" "}
-                    · {dayjs(item?.createdAt).fromNow()}
+                    <Text
+                      style={{
+                        color: "#0F1419",
+                        fontWeight: "700",
+                      }}
+                    >
+                      {user?.following?.length || 0}
+                    </Text>{" "}
+                    Following
                   </Text>
-                </View>
+                </TouchableOpacity>
 
-                {/* content */}
-
-                <Text
-                  style={{
-                    fontSize: 16,
-                    color: "#0F1419",
-                    lineHeight: 22,
-                    marginTop: 4,
-                  }}
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Followers", {
+                      _id: userId,
+                    })
+                  }
                 >
-                  {item.content}
-                </Text>
-
-                {/* image */}
-
-                {item.imgUrl ? (
-                  <Image
-                    source={{
-                      uri: item.imgUrl,
-                    }}
+                  <Text
                     style={{
-                      width: "100%",
-                      height: 220,
-                      borderRadius: 16,
-                      marginTop: 12,
+                      fontSize: 16,
+                      color: "#536471",
                     }}
-                    resizeMode="cover"
-                  />
-                ) : null}
+                  >
+                    <Text
+                      style={{
+                        color: "#0F1419",
+                        fontWeight: "700",
+                      }}
+                    >
+                      {user?.follower?.length || 0}
+                    </Text>{" "}
+                    Followers
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
-                {/* footer */}
+            {/* posts tab */}
+
+            <View
+              style={{
+                height: 55,
+                borderBottomWidth: 1,
+                borderBottomColor: "#EFF3F4",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "700",
+                  color: "#0F1419",
+                }}
+              >
+                Posts
+              </Text>
+
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  width: 65,
+                  height: 4,
+                  borderRadius: 10,
+                  backgroundColor: "#1D9BF0",
+                }}
+              />
+            </View>
+          </View>
+        }
+        ListEmptyComponent={
+          <View
+            style={{
+              alignItems: "center",
+              paddingVertical: 60,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: "700",
+                color: "#0F1419",
+              }}
+            >
+              No posts yet
+            </Text>
+          </View>
+        }
+        renderItem={({ item }) => {
+          const isLiked = item.likes.some((like) => {
+            return like.username === usernameLogin;
+          });
+
+          return (
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() =>
+                navigation.navigate("Detail", {
+                  _id: item._id,
+                })
+              }
+              style={{
+                paddingHorizontal: 16,
+                paddingVertical: 16,
+                borderBottomWidth: 1,
+                borderBottomColor: "#EFF3F4",
+                backgroundColor: "#fff",
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "flex-start",
+                }}
+              >
+                <Image
+                  source={{
+                    uri: "https://i.pravatar.cc/150",
+                  }}
+                  style={styles.avatar}
+                />
 
                 <View
                   style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginTop: 14,
-                    gap: 35,
+                    flex: 1,
+                    marginLeft: 10,
+                    minWidth: 0,
                   }}
                 >
+                  {/* name username time */}
+
                   <View
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
+                      flexWrap: "wrap",
                     }}
                   >
-                    <Ionicons
-                      name="chatbubble-outline"
-                      size={18}
-                      color="#536471"
-                    />
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        fontWeight: "700",
+                        color: "#0F1419",
+                        marginRight: 5,
+                      }}
+                      numberOfLines={1}
+                    >
+                      {item?.author[0]?.name}
+                    </Text>
 
                     <Text
                       style={{
-                        marginLeft: 5,
+                        fontSize: 15,
+                        color: "#536471",
+                        flexShrink: 1,
+                      }}
+                      numberOfLines={1}
+                    >
+                      @{item?.author[0]?.username}
+                    </Text>
+
+                    <Text
+                      style={{
+                        fontSize: 15,
                         color: "#536471",
                       }}
                     >
-                      {item.comments.length}
+                      {" "}
+                      · {dayjs(item?.createdAt).fromNow()}
                     </Text>
                   </View>
 
-                  <TouchableOpacity
-                    onPress={(event) => {
-                      event.stopPropagation();
+                  {/* content */}
 
-                      handleLike(item._id);
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: "#0F1419",
+                      lineHeight: 22,
+                      marginTop: 4,
                     }}
+                  >
+                    {item.content}
+                  </Text>
+
+                  {/* image */}
+
+                  {item.imgUrl ? (
+                    <Image
+                      source={{
+                        uri: item.imgUrl,
+                      }}
+                      style={{
+                        width: "100%",
+                        height: 220,
+                        borderRadius: 16,
+                        marginTop: 12,
+                      }}
+                      resizeMode="cover"
+                    />
+                  ) : null}
+
+                  {/* footer */}
+
+                  <View
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
+                      marginTop: 14,
+                      gap: 35,
                     }}
                   >
-                    <Ionicons
-                      name={
-                        isLiked
-                          ? "heart"
-                          : "heart-outline"
-                      }
-                      size={19}
-                      color={
-                        isLiked ? "red" : "#536471"
-                      }
-                    />
-
-                    <Text
+                    <View
                       style={{
-                        marginLeft: 5,
-                        color: isLiked
-                          ? "red"
-                          : "#536471",
+                        flexDirection: "row",
+                        alignItems: "center",
                       }}
                     >
-                      {item.likes.length}
-                    </Text>
-                  </TouchableOpacity>
+                      <Ionicons
+                        name="chatbubble-outline"
+                        size={18}
+                        color="#536471"
+                      />
+
+                      <Text
+                        style={{
+                          marginLeft: 5,
+                          color: "#536471",
+                        }}
+                      >
+                        {item.comments.length}
+                      </Text>
+                    </View>
+
+                    <TouchableOpacity
+                      onPress={(event) => {
+                        event.stopPropagation();
+
+                        handleLike(item._id);
+                      }}
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Ionicons
+                        name={isLiked ? "heart" : "heart-outline"}
+                        size={19}
+                        color={isLiked ? "red" : "#536471"}
+                      />
+
+                      <Text
+                        style={{
+                          marginLeft: 5,
+                          color: isLiked ? "red" : "#536471",
+                        }}
+                      >
+                        {item.likes.length}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        );
-      }}
-    />
+            </TouchableOpacity>
+          );
+        }}
+      />
+    </View>
   );
 }
