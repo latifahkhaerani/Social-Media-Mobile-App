@@ -643,6 +643,31 @@ export default function ProfileScreen({ route, navigation }) {
           );
         }}
       />
+      <TouchableOpacity
+          onPress={() => navigation.navigate("AddPost")}
+          style={{
+            position: "absolute",
+            right: 20,
+            bottom: 25,
+            width: 60,
+            height: 60,
+            borderRadius: 30,
+            backgroundColor: "#1f99f0",
+            justifyContent: "center",
+            alignItems: "center",
+
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 3,
+            },
+            shadowOpacity: 0.2,
+            shadowRadius: 4,
+            elevation: 5,
+          }}
+        >
+          <Ionicons name="add" size={35} color="#fff" />
+        </TouchableOpacity>
     </View>
   );
 }
