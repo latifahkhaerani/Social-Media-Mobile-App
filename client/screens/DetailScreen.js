@@ -13,7 +13,9 @@ import { useMutation, useQuery } from "@apollo/client/react";
 import { gql } from "@apollo/client";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { Ionicons } from "@react-native-vector-icons/ionicons";
+import { AuthContext } from "../context/AuthContext";
 
 dayjs.extend(relativeTime);
 
@@ -30,6 +32,7 @@ const GET_DETAIL = gql`
         updatedAt
         createdAt
         content
+        name
       }
       likes {
         username
@@ -39,6 +42,7 @@ const GET_DETAIL = gql`
       author {
         username
         _id
+        name
       }
     }
   }
@@ -65,8 +69,27 @@ const ADD_LIKE = gql`
   }
 `;
 
-export default function DetailScreen({ route }) {
+const GET_PROFILE = gql`
+  query GetUserById($id: ID) {
+    getUserById(_id: $id) {
+      _id
+      username
+    }
+  }
+`;
+
+export default function DetailScreen({ route, navigation }) {
   const { _id } = route.params;
+  // show button like by me
+  const { profileID } = useContext(AuthContext);
+
+  const { data: profileData } = useQuery(GET_PROFILE, {
+    variables: {
+      id: profileID,
+    },
+    skip: !profileID,
+  });
+
   // console.log(_id);
   const { loading, error, data } = useQuery(GET_DETAIL, {
     variables: {
@@ -78,9 +101,12 @@ export default function DetailScreen({ route }) {
   // console.log(data?.getPostById);
   const item = data?.getPostById;
 
+  // liked by me
+  const usernameLogin = profileData?.getUserById?.username;
+  const isLiked = item?.likes?.some((like) => like.username === usernameLogin);
+
   // comment
   const [myComment, setMyComment] = useState("");
-
   const [
     newComment,
     { loading: loadingComment, data: dataComment, error: errorComment },
@@ -127,16 +153,66 @@ export default function DetailScreen({ route }) {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView
-        style={{ flex: 1, backgroundColor: "#F8F9FA" }}
-        contentContainerStyle={{
+    <SafeAreaView
+      edges={["left", "right", "bottom"]}
+      style={{
+        flex: 1,
+        backgroundColor: "#fff",
+      }}
+    >
+      {/* HEADER */}
+      <View
+        style={{
+          height: 55,
+          flexDirection: "row",
+          alignItems: "center",
           justifyContent: "center",
-          paddingHorizontal: 25,
         }}
       >
-        <View style={styles.card}>
-          <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            position: "absolute",
+            left: 16,
+          }}
+        >
+          <Ionicons name="arrow-back" size={28} color="#111" />
+        </TouchableOpacity>
+
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "700",
+          }}
+        >
+          Post
+        </Text>
+      </View>
+
+      <ScrollView
+        style={{
+          flex: 1,
+          backgroundColor: "#fff",
+        }}
+        contentContainerStyle={{
+          paddingBottom: 20,
+        }}
+      >
+        {/* POST */}
+        <View
+          style={{
+            paddingHorizontal: 16,
+            paddingTop: 18,
+          }}
+        >
+          {/* AUTHOR */}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
             <Image
               source={{
                 uri: "https://i.pravatar.cc/100",
@@ -145,58 +221,220 @@ export default function DetailScreen({ route }) {
             />
 
             <View>
-              <Text style={styles.username}>{item?.author[0]?.username}</Text>
-              <Text style={styles.date}>
-                {dayjs(item?.createdAt).fromNow()}
-              </Text>
+              <Text style={styles.username}>{item?.author[0]?.name}</Text>
+
+              <Text style={styles.date}>@{item?.author[0]?.username}</Text>
             </View>
           </View>
 
-          <Text style={styles.content}>{item?.content}</Text>
+          {/* CONTENT */}
+          <Text
+            style={[
+              styles.content,
+              {
+                marginTop: 18,
+                marginBottom: 15,
+              },
+            ]}
+          >
+            {item?.content}
+          </Text>
 
-          <Image
-            source={{
-              uri: item?.imgUrl,
-            }}
-            style={styles.image}
-          />
+          {/* IMAGE */}
+          {item?.imgUrl ? (
+            <Image
+              source={{
+                uri: item.imgUrl,
+              }}
+              style={[
+                styles.image,
+                {
+                  width: "100%",
+                  borderRadius: 16,
+                  // resizeMode: "cover",
+                },
+              ]}
+            />
+          ) : null}
 
-          <View style={styles.info}>
-            <TouchableOpacity onPress={handleLike}>
-              <Text style={styles.like}>❤️ {item?.likes.length} Likes</Text>
-            </TouchableOpacity>
+          {/* CREATED AT */}
+          <Text
+            style={[
+              styles.date,
+              {
+                marginTop: 10,
+                // marginBottom: 9,
+              },
+            ]}
+          >
+            {dayjs(item?.createdAt).format("HH:mm · DD/MM/YY")}
+          </Text>
 
-            <Text style={styles.comments}>
-              💬 {item?.comments?.length} Comments
+          {/* COMMENT LIKE TAG */}
+          <View
+            style={[
+              styles.postFooter,
+              {
+                marginLeft: 2,
+                paddingVertical: 12,
+                alignItems: "center",
+              },
+            ]}
+          >
+            <Text style={styles.profileUsername}>
+              <Ionicons name="chatbubble-outline" size={20} color="#566573" />{" "}
+              {item?.comments?.length}
             </Text>
 
-            <Text style={styles.comments}> 🏷️ {item?.tags} </Text>
+            <TouchableOpacity onPress={handleLike}>
+              <Text style={styles.profileUsername}>
+                <Ionicons
+                  name={isLiked ? "heart" : "heart-outline"}
+                  size={20}
+                  color={isLiked ? "red" : "#566573"}
+                />{" "}
+                {item?.likes?.length}
+              </Text>
+            </TouchableOpacity>
+
+            <Text style={styles.profileUsername}>
+              <Ionicons name="pricetag-outline" size={20} color="#566573" />{" "}
+              {item?.tags}
+            </Text>
           </View>
         </View>
 
-        <Text style={styles.commentTitle}>Comments</Text>
-
-        {item?.comments.map((c, idx) => {
-          // console.log(c);
+        {/* COMMENTS */}
+        {item?.comments?.map((c, idx) => {
           return (
-            <View key={idx} style={styles.commentCard}>
-              <Text style={styles.commentUser}>{c.username}</Text>
-              <Text>{c.content}</Text>
+            <View
+              key={idx}
+              style={{
+                flexDirection: "row",
+                alignItems: "flex-start",
+                paddingHorizontal: 16,
+                paddingVertical: 15,
+                borderBottomWidth: 1,
+                borderBottomColor: "#e5e7eb",
+                gap: 10,
+              }}
+            >
+              <Image
+                source={{
+                  uri: "https://i.pravatar.cc/100",
+                }}
+                style={styles.avatar}
+              />
+
+              <View style={{ flex: 1 }}>
+                {/* USERNAME */}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 5,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <Text style={styles.comment}>{c.username}</Text>
+
+                  <Text style={styles.date}>@{c.name}</Text>
+
+                  <Text style={styles.date}>
+                    • {dayjs(c?.createdAt).fromNow()}
+                  </Text>
+                </View>
+
+                {/* COMMENT */}
+                <Text
+                  style={{
+                    marginTop: 3,
+                    fontSize: 16,
+                    lineHeight: 21,
+                  }}
+                >
+                  {c.content}
+                </Text>
+              </View>
             </View>
           );
         })}
-
-        <TextInput
-          onChangeText={setMyComment}
-          value={myComment}
-          placeholder="Write a comment..."
-          style={styles.input}
-        />
-
-        <TouchableOpacity style={styles.button} onPress={handleComment}>
-          <Text style={styles.buttonText}>Send</Text>
-        </TouchableOpacity>
       </ScrollView>
+      <View
+        style={{
+          backgroundColor: "#fff",
+          borderTopWidth: 1,
+          borderTopColor: "#e5e7eb",
+          paddingHorizontal: 12,
+          paddingTop: 10,
+          paddingBottom: 8,
+        }}
+      >
+        {/* REPLYING TO */}
+        <Text
+          style={{
+            color: "#657786",
+            fontSize: 14,
+            marginBottom: 8,
+          }}
+        >
+          Replying to{" "}
+          <Text
+            style={{
+              color: "#1f99f0",
+            }}
+          >
+            @{item?.author[0]?.username}
+          </Text>
+        </Text>
+
+        <View
+          style={{
+            flexDirection: "col",
+            // alignItems: "center",
+            gap: 10,
+          }}
+        >
+          {/* INPUT */}
+          <TextInput
+            onChangeText={setMyComment}
+            value={myComment}
+            placeholder="Post your reply"
+            placeholderTextColor="#5b6773"
+            style={[
+              styles.commentCard,
+              {
+                flex: 1,
+                margin: 0,
+                minHeight: 45,
+                paddingHorizontal: 16,
+              },
+            ]}
+          />
+
+          {/* REPLY BUTTON */}
+          <TouchableOpacity
+            onPress={handleComment}
+            disabled={!myComment.trim() || loadingComment}
+            style={{
+              backgroundColor: myComment.trim() ? "#1f99f0" : "#bfe3fa",
+              borderRadius: 100,
+              paddingVertical: 10,
+              paddingHorizontal: 18,
+              display: myComment.trim() ? "block" : "none",
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontWeight: "700",
+              }}
+            >
+              Reply
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }

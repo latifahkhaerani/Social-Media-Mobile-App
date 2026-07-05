@@ -22,7 +22,7 @@ export default function MainNavigator() {
         <>
           {/* <Stack.Screen name="Home" component={MyTabNavigator} /> */}
           <Stack.Screen name="Feed" component={MyDrawerNavigator} />
-          <Stack.Screen name="Detail" component={DetailScreen} />
+          {/* <Stack.Screen name="Detail" component={DetailScreen} /> */}
           <Stack.Screen name="UserProfile" component={ProfileScreen} />
           <Stack.Screen name="AddPost" component={CreatePostScreen} />
         </>

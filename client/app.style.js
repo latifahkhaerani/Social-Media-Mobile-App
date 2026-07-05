@@ -42,11 +42,17 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: "#0095F6",
-    padding: 16,
-    borderRadius: 12,
-    alignItems: "center",
-    marginTop: 5,
+    backgroundColor: "#1f99f0",
+    borderRadius: 100,
+    padding: 10,
+    paddingHorizontal: 18,
+    width: 80,
+    marginRight: 10,
+
+    // padding: 16,
+    // borderRadius: 12,
+    // alignItems: "center",
+    // marginTop: 5,
   },
 
   buttonText: {
@@ -135,10 +141,11 @@ const styles = StyleSheet.create({
   },
 
   commentCard: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 12,
-    marginBottom: 12,
+    backgroundColor: "#f0f4f5",
+    padding: 10,
+    borderRadius: 100,
+    margin: 12,
+    color: "#5b6773",
   },
 
   commentUser: {
@@ -203,8 +210,8 @@ const styles = StyleSheet.create({
     // justifyContent: "start",
     alignItems: "center",
     gap: 38,
-    borderTop: 5,
-    borderColor: "black",
+    // borderTop: 5,
+    // borderColor: "black",
     paddingTop: 15,
     fontSize: "bold",
     borderTopWidth: 1,

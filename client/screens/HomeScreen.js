@@ -239,6 +239,7 @@ export default function HomeScreen({ navigation }) {
                     ]}
                   />
                 ) : null}
+                {/* comment,like */}
                 <View style={styles.postFooter}>
                   <Text>
                     {" "}
@@ -261,7 +262,7 @@ export default function HomeScreen({ navigation }) {
             );
           }}
         />
-        {/* add post */}
+        {/* add post border button */}
         <TouchableOpacity
           onPress={() => navigation.navigate("AddPost")}
           style={{
