@@ -234,7 +234,6 @@ export default function HomeScreen({ navigation }) {
                           fontSize: 15,
                           color: "#1f99f0",
                           lineHeight: 24,
-                          marginBottom: 10,
                         }}
                       >
                         {item.tags.map((tag) => `#${tag}`).join(" ")}
@@ -253,6 +252,7 @@ export default function HomeScreen({ navigation }) {
                         width: "83%",
                         height: 200,
                         borderRadius: 16,
+                        marginTop: 8,
                       },
                     ]}
                   />

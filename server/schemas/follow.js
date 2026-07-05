@@ -29,7 +29,7 @@ const resolvers = {
         updatedAt: new Date(),
       };
 
-      console.log(loginInfo._id, followingId);
+      // console.log(loginInfo._id, followingId);
 
       if (loginInfo._id.toString() === followingId) {
         throw new Error("Cannot follow yourself");

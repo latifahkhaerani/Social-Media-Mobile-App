@@ -50,19 +50,6 @@ export default function LoginScreen({ navigation }) {
       console.log(error);
     }
   }
-   if (loading) {
-      return (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <ActivityIndicator size="large" />
-        </View>
-      );
-    }
 
   return (
     <View
