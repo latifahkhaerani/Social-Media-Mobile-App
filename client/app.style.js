@@ -198,6 +198,18 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
 
+  addpostFooter: {
+    flexDirection: "row",
+    // justifyContent: "start",
+    alignItems: "center",
+    marginLeft: 25,
+    gap: 40,
+    borderTop: 5,
+    borderColor: "black",
+    // paddingVertical: 5,
+    fontSize: "bold",
+  },
+
   profileHeader: {
     flexDirection: "row",
     marginBottom: 0,

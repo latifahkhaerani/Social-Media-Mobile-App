@@ -3,6 +3,9 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import styles from "../app.style";
 import { gql } from "@apollo/client";
 import { useMutation, useQuery } from "@apollo/client/react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@react-native-vector-icons/ionicons";
+import BottomSheet from "../components/BottomSheet";
 
 const ADD_POST = gql`
   mutation AddPost($content: String, $tags: [String], $imgUrl: String) {
@@ -40,6 +43,9 @@ export default function CreatePostScreen({ navigation }) {
   const [tags, setTags] = useState("");
   const [imgUrl, setImgUrl] = useState("");
 
+  // modal
+  const [openModal, setOpenModal] = useState(null);
+
   const [newPost, { loading, error, data }] = useMutation(ADD_POST, {
     refetchQueries: ["getPost"],
     awaitRefetchQueries: true,
@@ -65,7 +71,7 @@ export default function CreatePostScreen({ navigation }) {
       setImgUrl("");
       setTags("");
       Alert.alert("Success", "Post created!");
-      navigation.navigate("Home");
+      navigation.navigate("Feed");
     } catch (error) {
       console.log(error);
       Alert.alert(error.message);
@@ -73,37 +79,100 @@ export default function CreatePostScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create Post</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, justifyContent: "space-between", height: 100 }}>
+        <View>
+          {/* button */}
+          <View
+            style={[
+              styles.header,
+              {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 20,
+              },
+            ]}
+          >
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Text style={[styles.postContent, { marginBottom: 0 }]}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+            {/* post */}
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#1f99f0",
+                borderRadius: 100,
+                padding: 8,
+                paddingHorizontal: 18,
+              }}
+              onPress={handleSubmit}
+            >
+              <Text style={styles.buttonText}>Post</Text>
+            </TouchableOpacity>
+          </View>
+          {/* content */}
+          <View>
+            <TextInput
+              placeholder="What's happening?"
+              multiline
+              numberOfLines={5}
+              value={content}
+              onChangeText={setContent}
+              style={{ fontSize: 18 }}
+            />
 
-      <View style={styles.card}>
-        <TextInput
-          placeholder="What's on your mind?"
-          multiline
-          numberOfLines={5}
-          value={content}
-          onChangeText={setContent}
-          style={[styles.input, styles.textArea]}
-        />
+            {/* <TextInput
+              placeholder="Tags (optional)"
+              value={tags}
+              onChangeText={setTags}
+              style={styles.input}
+            />
 
-        <TextInput
-          placeholder="Tags (optional)"
-          value={tags}
-          onChangeText={setTags}
-          style={styles.input}
-        />
+            <TextInput
+              placeholder="Image URL (optional)"
+              value={imgUrl}
+              onChangeText={setImgUrl}
+              style={styles.input}
+            /> */}
+          </View>
+        </View>
+        {/* tabs */}
+        {/* <View style={styles.addpostFooter}>
+          <Ionicons name="image-outline" size={20} color={"#1f99f0"} />
+          <Ionicons name="pricetags-outline" size={20} color={"#1f99f0"} />
+        </View> */}
+        <View style={styles.addpostFooter}>
+          <TouchableOpacity onPress={() => setOpenModal("image")}>
+            <Ionicons name="image-outline" size={20} color="#1f99f0" />
+          </TouchableOpacity>
 
-        <TextInput
-          placeholder="Image URL (optional)"
-          value={imgUrl}
-          onChangeText={setImgUrl}
-          style={styles.input}
-        />
-
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Post</Text>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => setOpenModal("tags")}>
+            <Ionicons name="pricetags-outline" size={20} color="#1f99f0" />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+      <BottomSheet
+        visible={openModal !== null}
+        onClose={() => setOpenModal(null)}
+        title={openModal === "image" ? "Add Image" : "Add Tags"}
+      >
+        {openModal === "image" ? (
+          <TextInput
+            placeholder="Image URL"
+            value={imgUrl}
+            onChangeText={setImgUrl}
+            style={styles.input}
+          />
+        ) : (
+          <TextInput
+            placeholder="Tags"
+            value={tags}
+            onChangeText={setTags}
+            style={styles.input}
+          />
+        )}
+      </BottomSheet>
+    </SafeAreaView>
   );
 }
