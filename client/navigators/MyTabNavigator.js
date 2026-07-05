@@ -12,7 +12,7 @@ const Tab = createBottomTabNavigator();
 
 export default function MyTabNavigator() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           headerShown: false,
@@ -43,8 +43,8 @@ export default function MyTabNavigator() {
         <Tab.Screen name="Home" component={HomeScreen} />
         {/* <Tab.Screen name="Drawer" component={MyDrawerNavigator} /> */}
         <Tab.Screen name="Search" component={SearchScreen} />
-        <Tab.Screen name="Add Post" component={CreatePostScreen} />
-        {/* <Tab.Screen name="Profile" component={ProfileScreen} /> */}
+        {/* <Tab.Screen name="Add Post" component={CreatePostScreen} /> */}
+        <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     </SafeAreaView>
   );

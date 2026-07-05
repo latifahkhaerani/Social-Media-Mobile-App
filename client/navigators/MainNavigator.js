@@ -9,6 +9,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext.js";
 import ProfileScreen from "../screens/ProfileScreen.js";
 import MyDrawerNavigator from "./MyDrawerNavigator.js";
+import CreatePostScreen from "../screens/CreatePostScreen.js";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,7 @@ export default function MainNavigator() {
           <Stack.Screen name="Feed" component={MyDrawerNavigator} />
           <Stack.Screen name="Detail" component={DetailScreen} />
           <Stack.Screen name="UserProfile" component={ProfileScreen} />
+          <Stack.Screen name="AddPost" component={CreatePostScreen} />
         </>
       ) : (
         <>

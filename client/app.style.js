@@ -94,12 +94,12 @@ const styles = StyleSheet.create({
 
   username: {
     fontWeight: "bold",
-    fontSize: 17,
+    fontSize: 20,
   },
 
   date: {
     color: "#888",
-    fontSize: 13,
+    fontSize: 14,
     marginTop: 2,
   },
 
@@ -157,13 +157,13 @@ const styles = StyleSheet.create({
 
   postHeader: {
     flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
+    alignItems: "start",
+    // marginBottom: 10,
   },
 
   avatar: {
-    width: 48,
-    height: 48,
+    width: 40,
+    height: 40,
     borderRadius: 24,
     marginRight: 12,
   },
@@ -190,16 +190,19 @@ const styles = StyleSheet.create({
 
   postFooter: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "start",
     alignItems: "center",
+    marginLeft: 50,
+    gap: 40,
     marginTop: 5,
     paddingVertical: 5,
   },
 
   profileHeader: {
-    alignItems: "flex-start",
+    flexDirection: "row",
     marginBottom: 0,
     backgroundColor: "#fff",
+    gap: 20,
   },
 
   profileImage: {

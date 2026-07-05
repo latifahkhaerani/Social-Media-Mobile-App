@@ -65,14 +65,18 @@ export default function CustomDrawerContent(props) {
 
         <TouchableOpacity
           style={styles.menu}
-          onPress={() => props.navigation.navigate("Profile")}
+          onPress={() =>
+            props.navigation.navigate("MainTabs", {
+              screen: "Profile",
+            })
+          }
         >
           <Text style={styles.menuText}>Profile</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.menu}
-          onPress={() => props.navigation.navigate("Profile")}
+          onPress={() => props.navigation.navigate("Login")}
         >
           <Text style={styles.menuText}>Logout</Text>
         </TouchableOpacity>

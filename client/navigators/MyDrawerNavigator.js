@@ -20,7 +20,7 @@ export default function MyDrawerNavigator() {
           },
         }}
       />
-      <Drawer.Screen name="Profile" component={ProfileScreen} />
+      {/* <Drawer.Screen name="Profile" component={ProfileScreen} /> */}
     </Drawer.Navigator>
   );
 }
