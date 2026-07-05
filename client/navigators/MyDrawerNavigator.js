@@ -17,8 +17,10 @@ export default function MyDrawerNavigator() {
           title: "",
           drawerItemStyle: {
             display: "none",
+            
           },
         }}
+        
       />
       {/* <Drawer.Screen name="Profile" component={ProfileScreen} /> */}
     </Drawer.Navigator>

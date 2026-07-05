@@ -14,6 +14,7 @@ import FollowingList from "../screens/FollowingList.js";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+const SearchStack = createNativeStackNavigator();
 
 function HomeStack() {
   return (
@@ -47,6 +48,22 @@ function HomeStack() {
   );
 }
 
+function SearchStackNavigator() {
+  return (
+    <SearchStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <SearchStack.Screen name="SearchScreen" component={SearchScreen} />
+
+      <SearchStack.Screen name="UserProfile" component={ProfileScreen} />
+
+      <SearchStack.Screen name="Detail" component={DetailScreen} />
+    </SearchStack.Navigator>
+  );
+}
+
 export default function MyTabNavigator() {
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
@@ -63,7 +80,7 @@ export default function MyTabNavigator() {
 
           tabBarIcon: ({ color, size, focused }) => {
             let iconName;
-            if (route.name === "Posts") {
+            if (route.name === "Home") {
               iconName = focused ? "home" : "home-outline";
             } else if (route.name === "Search") {
               iconName = focused ? "search" : "search-outline";
@@ -79,7 +96,8 @@ export default function MyTabNavigator() {
       >
         <Tab.Screen name="Home" component={HomeStack} />
         {/* <Tab.Screen name="Drawer" component={MyDrawerNavigator} /> */}
-        <Tab.Screen name="Search" component={SearchScreen} />
+        {/* <Tab.Screen name="Search" component={SearchScreen} /> */}
+        <Tab.Screen name="Search" component={SearchStackNavigator} />
         {/* <Tab.Screen name="Add Post" component={CreatePostScreen} /> */}
       </Tab.Navigator>
     </SafeAreaView>

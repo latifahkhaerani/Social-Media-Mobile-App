@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { useQuery } from "@apollo/client/react";
 import { gql } from "@apollo/client";
 import { AuthContext } from "../context/AuthContext";
+import { deleteItemAsync } from "expo-secure-store";
 
 const GET_PROFILE = gql`
   query GetUserById($id: ID) {
@@ -22,7 +23,7 @@ const GET_PROFILE = gql`
 `;
 
 export default function CustomDrawerContent(props) {
-  const { profileID } = useContext(AuthContext);
+  const { profileID, setProfileID, setIsSignedIn } = useContext(AuthContext);
 
   const { data } = useQuery(GET_PROFILE, {
     variables: {
@@ -32,6 +33,17 @@ export default function CustomDrawerContent(props) {
   });
 
   const user = data?.getUserById;
+
+  async function handleLogout() {
+    try {
+      await deleteItemAsync("token");
+
+      setIsSignedIn(false);
+      setProfileID(null);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <DrawerContentScrollView {...props}>
@@ -95,10 +107,7 @@ export default function CustomDrawerContent(props) {
           <Text style={styles.menuText}>Profile</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.menu}
-          onPress={() => props.navigation.navigate("Login")}
-        >
+        <TouchableOpacity style={styles.menu} onPress={handleLogout}>
           <Text style={styles.menuText}>Logout</Text>
         </TouchableOpacity>
       </View>
