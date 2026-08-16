@@ -1,88 +1,109 @@
-# Journey
+# Development Journey
 
 ## Day 1
 
-### Setup Project: Tema Aplikasi, Apollo Server, GraphQL
-Silahkan setup project aplikasi server kamu:
-- [ ] Install MongoDB database pada komputer kamu atau menggunakan MongoDB Atlas
-- [ ] Install package yang dibutuhkan: @apollo/server, graphql dan mongodb sebagai MongoDB driver
-- [ ] Pilih tema sesuai dengan pilihan dan kesepakatan instructor, tuliskan dalam README github kamu
-- [ ] Buatlah aplikasi server GraphQL menggunakan Apollo Server dengan PORT default: 3000
+### Project Setup: Application Theme, Apollo Server, and GraphQL
 
+Set up the server application with the following requirements:
+
+* [x] Install MongoDB locally or use MongoDB Atlas
+* [x] Install the required packages: `@apollo/server`, `graphql`, and `mongodb` as the MongoDB driver
+* [x] Define the application theme and document it in the GitHub README
+* [x] Create a GraphQL server using Apollo Server with the default port `3000`
 
 ### GraphQL - Apollo Server
-Buatlah Aplikasi server GraphQL dengan menggunakan Apollo Server yang memiliki fungsi sebagai berikut:
-- [ ] Register (Mutation)
-- [ ] Login (Query)
-- [ ] Get Post (Query)
-- [ ] Add Post (Mutation)
-- [ ] Comment Post (Mutation)
-- [ ] Search User (Query)
-- [ ] Follow (Mutation)
-- [ ] Get User (Query)
-- [ ] Like Post (Mutation)
+
+Build a GraphQL server using Apollo Server with the following queries and mutations:
+
+* [x] Register (Mutation)
+* [x] Login (Query)
+* [x] Get Posts (Query)
+* [x] Add Post (Mutation)
+* [x] Comment on Post (Mutation)
+* [x] Search Users (Query)
+* [x] Follow User (Mutation)
+* [x] Get User (Query)
+* [x] Like Post (Mutation)
 
 ### MongoDB 1
-Buatlah fungsi/method pada aplikasi server GraphQL kamu yang menghubungkan dengan database MongoDB dengan fungsi sebagai berikut:
-- [ ] Add user: untuk kebutuhan register
-- [ ] Get user by username dan password: untuk kebutuhan login
-- [ ] Search users by name/username: untuk kebutuhan mencari user berdasarkan nama atau username
-- [ ] Follow User: untuk kebutuhan memfollow user
-- [ ] Get User by Id: untuk menampilkan profile user
-- [ ] Add Post: untuk menambahkan post baru
-- [ ] Get Posts: mengambil daftar post berdasarkan yang terbaru
-- [ ] Get Post by Id: mengambil post berdasarkan id
-- [ ] Comment Post: untuk menambahkan komentar pada post
-- [ ] Like Post: untuk menambahkan like pada post
 
+Implement functions and methods to connect the GraphQL server to MongoDB:
+
+* [x] Add User — used during registration
+* [x] Get User by Username and Password — used during login
+* [x] Search Users by Name or Username
+* [x] Follow User
+* [x] Get User by ID — used to display a user profile
+* [x] Add Post
+* [x] Get Posts — retrieve posts sorted by the latest
+* [x] Get Post by ID
+* [x] Comment on Post
+* [x] Like Post
+
+---
 
 ## Day 2
 
 ### MongoDB 2
-Buatlah lookup/relasi pada method/fungsi yang berhubungan dengan MongoDB yang sudah kamu buat dengan rincian sebagai berikut:
-- [ ] Get Post by Id: mengambil post berdasarkan id
-  - [ ] Menampilkan nama/username user pada data komentar
 
-- [ ] Get User by Id: untuk menampilkan profile user
-  - [ ] Menampilkan list nama/username user follower
-  - [ ] Menampilkan list nama/username user following
+Implement MongoDB lookups and relationships for the existing database functions.
 
+#### Get Post by ID
 
-### Redis - Cache
-Implementasikan cache pada aplikasi GraphQL server yang sudah dibuat dengan detail sebagai berikut:
-- [ ] Implementasikan cache pada Get Post (Query)
-- [ ] Invalidate cache pada Add Post (Mutation)
+* [x] Display the commenter's name or username within each comment
+
+#### Get User by ID
+
+* [x] Display the user's profile
+* [x] Display the names or usernames of the user's followers
+* [x] Display the names or usernames of the user's following
+
+### Redis - Caching
+
+Implement Redis caching in the GraphQL server:
+
+* [x] Cache the `Get Posts` query
+* [x] Invalidate the cache when a new post is added through the `Add Post` mutation
+
+---
 
 ## Day 3
+
 ### React Native
-Buatlah aplikasi mobile React-Native dengan menggunakan expo. Aplikasi ini adalah client side dari challenge My Social Media App.
-Pada aplikasi ini kamu perlu membuat screen sebagai berikut:
-- [ ] Unauthenticate screen
-  - [ ] Login Screen: Menampilkan form untuk login
-  - [ ] Register Screen: Menampilkan form untuk register
 
-- [ ] Authenticate screen
-  - [ ] Home screen: Menampilkan list post
-  - [ ] Create Post: Menampilkan form untuk menambahkan post baru
-  - [ ] Post Detail Screen: Menampilkan post detail berdasarkan id dan form untuk komentar
-  - [ ] Search Screen: Menampilkan form pencarian untuk mencari user (bisa digabung dengan screen lain)
-  - [ ] Profile Screen: Menampilkan profile user berdasarkan id, serta menampilkan jumlah followings dan followers user.
+Build the mobile client for the My Social Media App using React Native and Expo.
 
+#### Unauthenticated Screens
+
+* [x] Login Screen — display a login form
+* [x] Register Screen — display a registration form
+
+#### Authenticated Screens
+
+* [x] Home Screen — display the latest posts
+* [x] Create Post Screen — provide a form for creating a new post
+* [x] Post Detail Screen — display post details and provide a comment form
+* [x] Search Screen — provide a form for searching users
+* [x] Profile Screen — display a user's profile, followers, and following counts
 
 ### React Navigation
- - [ ] Implementasikan navigasi pada screen yang sudah kamu buat dengan menggunakan React Navigation.
 
+* [x] Implement navigation between the application's screens using React Navigation
+
+---
 
 ## Day 4
-### GraphQL - Apollo Client
-Lakukan komunikasi Aplikasi Mobile (react-native) menggunakan apollo client ke server GraphQL  yang sudah dibuat. Dan Implementasikan query dan mutation sesuai dengan kebutuhan.
-- [ ] Register (Mutation)
-- [ ] Login (Query)
-- [ ] Get Post (Query)
-- [ ] Add Post (Mutation)
-- [ ] Comment Post (Mutation)
-- [ ] Search User (Query)
-- [ ] Follow (Mutation)
-- [ ] Get User (Query)
-- [ ] Like Post (Mutation)
 
+### GraphQL - Apollo Client
+
+Connect the React Native mobile client to the GraphQL server using Apollo Client and implement the required queries and mutations.
+
+* [x] Register (Mutation)
+* [x] Login (Query)
+* [x] Get Posts (Query)
+* [x] Add Post (Mutation)
+* [x] Comment on Post (Mutation)
+* [x] Search Users (Query)
+* [x] Follow User (Mutation)
+* [x] Get User (Query)
+* [x] Like Post (Mutation)
