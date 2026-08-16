@@ -56,7 +56,7 @@ This project was built as part of my mobile application development journey and 
 
 ```text
 .
-├── app/
+├── client/
 │   └── React Native mobile application
 │
 └── server/
